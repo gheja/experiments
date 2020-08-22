@@ -1,9 +1,29 @@
+@font-face
+{
+    font-family: emoji;
+    src: url(twemoji.ttf);
+}
+
+::selection
+{
+    /* not pefect but at least we don't do js */
+    color: none;
+    background: transparent;
+}
+
+html
+{
+    font-size: max(12px, 2.2vh);
+}
+
 body
 {
     background: url("picsum.photos_placeholder_424-536x354.jpg");
+    /* background: repeating-linear-gradient(-15deg, #21bb0c, #0ba510 15%, #0dbf33 16%); */
     font-family: "Segoe UI", serif;
-    font-size: 2.2vh;
+    padding-top: 8rem;
 }
+
 .window
 {
     background: rgba(255,255,255,0.5);
@@ -66,3 +86,64 @@ body
      animation: anim2 2s infinite;
      animation-timing-function: linear;
  }
+
+.button,
+.button-disabled
+{
+    float: left;
+    font-size: 1.5rem;
+    padding: 0.25em;
+    border: 0.2rem solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.1);
+    border-radius: 0.2em;
+    margin: 0 0 0 0.2em;
+    width: 1em;
+    height: 1em;
+    font-family: emoji;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    filter: grayscale(30%);
+}
+.button:hover
+{
+    border-color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.5);
+    filter: grayscale(0%);
+}
+.button-disabled
+{
+    filter: grayscale(100%);
+    cursor: not-allowed;
+    background: rgba(255,255,255,0.3);
+}
+.toolbar
+{
+    position: fixed;
+    top: 2.2rem;
+}
+.toolbar2
+{
+    position: fixed;
+    top: 5.2rem;
+    left: 1rem;
+}
+.emoji
+{
+    font-family: emoji;
+}
+.statusbar
+{
+    position: fixed;
+    top: 0.2rem;
+    right: 0.2rem;
+}
+.status
+{
+    border-radius: 0.2rem;
+    float: right;
+    background: rgba(0,0,0,0.7);
+    margin: 0 0 0 0.5rem;
+    color: #fff;
+    padding: 0.2em 0.5em;
+    display: block;
+}
