@@ -7,14 +7,19 @@ function render()
 {
     let a: NetworkNode, b: NetworkNode;
 
+    _tracks.selectNearestNode(_gfx.cursorPosition);
+
     _gfx.renderBegin();
-    _gfx.setStroke(2, "#000");
     for (a of _tracks.nodes)
     {
+        _gfx.setStroke(2, a.selected ? "#99c" : "#000");
         _gfx.drawBegin();
         _gfx.drawCircle(a.x, a.y, 10);
         _gfx.drawStroke();
     }
+
+    _gfx.setStroke(2, "#000");
+
     for (a of _tracks.nodes)
     {
         for (b of a.neighbours)
