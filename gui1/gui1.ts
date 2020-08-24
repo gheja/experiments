@@ -13,8 +13,8 @@ function getNextZIndex()
 function windowMouseDown(event: MouseEvent)
 {
     // console.log("down");
-    (event.currentTarget as HTMLElement).dataset.selected = "1";
-    (event.currentTarget as HTMLElement).style.zIndex = getNextZIndex();
+    (this as HTMLElement).dataset.selected = "1";
+    (this as HTMLElement).style.zIndex = getNextZIndex();
 }
 
 function windowMouseUp()
@@ -47,6 +47,11 @@ function windowUpdate(dx, dy)
     }
 }
 
+function closeWindow()
+{
+    this.parentNode.removeChild(this);
+}
+
 function createWindow()
 {
     let win: HTMLDivElement;
@@ -54,12 +59,21 @@ function createWindow()
 
     win = document.createElement("div");
     win.className = "window";
-    win.addEventListener("mousedown", windowMouseDown.bind(null));
-    win.addEventListener("mouseup", windowMouseUp.bind(null));
+    win.addEventListener("mousedown", windowMouseDown.bind(win));
+    win.addEventListener("touchstart", windowMouseDown.bind(win));
+    win.addEventListener("mouseup", windowMouseUp.bind(win));
+    win.addEventListener("touchend" , windowMouseUp.bind(win));
+    win.style.zIndex = getNextZIndex();
 
     a = document.createElement("div");
     a.className = "title";
     a.innerHTML = "Choo-choo train";
+    win.appendChild(a);
+
+    a = document.createElement("div");
+    a.className = "close";
+    a.innerHTML = "X";
+    a.addEventListener("click", closeWindow.bind(win));
     win.appendChild(a);
 
     a = document.createElement("div");
@@ -73,16 +87,60 @@ function createWindow()
 let _mouseX = 0;
 let _mouseY = 0;
 
+function onTouchStart(event: TouchEvent)
+{
+    _mouseX = event.touches[0].screenX;
+    _mouseY = event.touches[0].screenY;
+}
+
 function onMouseMove(event: MouseEvent)
 {
+    if (event instanceof TouchEvent)
+    {
+        event.screenX = event.touches[0].screenX;
+        event.screenY = event.touches[0].screenY;
+    }
+
     windowUpdate(event.screenX - _mouseX, event.screenY - _mouseY)
     _mouseX = event.screenX;
     _mouseY = event.screenY;
 }
 
+function setTooltip(s: string = "-")
+{
+    document.getElementById("tooltip").innerHTML = s ? s : "-";
+}
+
+function showTooltip(e)
+{
+    setTooltip((this.dataset.tooltip ?? "") + (this.classList.contains("button-disabled") ? " (locked)" : ""));
+}
+
+function hideTooltip(e)
+{
+    setTooltip();
+}
+
+function initTooltips()
+{
+    let a: HTMLElement;
+
+    for (a of document.querySelectorAll<HTMLElement>("*"))
+    {
+        if (a.dataset.tooltip)
+        {
+            a.addEventListener("mouseover", showTooltip.bind(a));
+            a.addEventListener("mouseout", hideTooltip.bind(a));
+        }
+    }
+}
+
 function init()
 {
+    initTooltips();
     window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("touchstart", onTouchStart);
+    window.addEventListener("touchmove", onMouseMove);
 }
 
 window.addEventListener("load", init);

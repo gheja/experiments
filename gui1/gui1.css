@@ -19,10 +19,10 @@ html
 body
 {
     background: url("picsum.photos_placeholder_424-536x354.jpg");
-    /* background: repeating-linear-gradient(-15deg, #21bb0c, #0ba510 15%, #0dbf33 16%); */
     font-family: "Segoe UI", serif;
     padding-top: 8rem;
     overflow: hidden;
+    cursor: default;
 }
 
 .window
@@ -36,14 +36,18 @@ body
 }
 .title
 {
-    /* background: rgba(0,128,192,0.5); */
     background: rgba(0,0,0,0.5);
     color: #ffffff;
     padding: 0.1em 0.3em 0.3em 0.3em;
 }
 .close
 {
-
+    background: rgba(255,0,0,0.3);
+    color: #ffffff;
+    float: right;
+    margin-top: -1.75em;
+    padding: 0.125em 0.5em;
+    cursor: pointer;
 }
 .body
 {
