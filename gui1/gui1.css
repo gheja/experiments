@@ -22,6 +22,7 @@ body
     /* background: repeating-linear-gradient(-15deg, #21bb0c, #0ba510 15%, #0dbf33 16%); */
     font-family: "Segoe UI", serif;
     padding-top: 8rem;
+    overflow: hidden;
 }
 
 .window
@@ -146,4 +147,14 @@ body
     color: #fff;
     padding: 0.2em 0.5em;
     display: block;
+}
+
+.hue1
+{
+    filter: hue-rotate(120deg) !important;
+}
+
+.hue2
+{
+    filter: hue-rotate(180deg) !important;
 }

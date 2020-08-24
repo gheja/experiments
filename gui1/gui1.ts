@@ -64,7 +64,7 @@ function createWindow()
 
     a = document.createElement("div");
     a.className = "body";
-    a.innerHTML = `Class: <span>Loremipsu</span><br/>Capacity: <span>1300</span><br/>Cargo: <span>150</span><br/>Maintenance: <span>1200 USD/year</span>`;
+    a.innerHTML = "Class: <span>Loremipsu</span><br/>Capacity: <span>1300</span><br/>Cargo: <span>150</span><br/>Running cost: <span>$" + (Math.floor(Math.random() * 20 + 2) * 100) + "/year</span>";
     win.appendChild(a);
 
     document.body.appendChild(win);
