@@ -12,11 +12,12 @@ let mvp;
 let inverseTranspose;
 
 let shapes;
+let objects;
 let ticks = 0;
 
 function tick()
 {
-    let shape;
+    let obj;
 
     // Set the model matrix
     let modelMatrix;
@@ -25,12 +26,12 @@ function tick()
 
     ticks++;
 
-    shapes[0].ry += 0.013;
-    shapes[1].ry -= 0.017;
-    shapes[2].ry -= 0.022;
-    shapes[0].x += Math.cos(ticks * 0.05) * 0.05;
-    shapes[1].y += Math.cos(ticks * 0.03) * 0.05;
-    shapes[2].z += Math.cos(ticks * 0.03) * 0.05;
+    objects[0].ry += 0.013;
+    objects[1].ry -= 0.017;
+    objects[2].ry -= 0.022;
+    objects[0].x += Math.cos(ticks * 0.05) * 0.05;
+    objects[1].y += Math.cos(ticks * 0.03) * 0.05;
+    objects[2].z += Math.cos(ticks * 0.03) * 0.05;
 
     gl.useProgram(program);
 
@@ -40,10 +41,10 @@ function tick()
 
     // Render
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    for (shape of shapes)
+    for (obj of objects)
     {
         modelMatrix = identity();
-        modelMatrix = transform(modelMatrix, { ry: shape.ry, x: shape.x, y: shape.y, z: shape.z });
+        modelMatrix = transform(modelMatrix, { ry: obj.ry, x: obj.x, y: obj.y, z: obj.z });
         gl.uniformMatrix4fv(model, false, modelMatrix);
 
         // Set the cube's mvp matrix (camera x model)
@@ -54,22 +55,22 @@ function tick()
         inverseTransposeMatrix = transpose(inverse(modelMatrix));
         gl.uniformMatrix4fv(inverseTranspose, false, inverseTransposeMatrix);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, shape.b_p);
+        gl.bindBuffer(gl.ARRAY_BUFFER, obj.shape.b_p);
         gl.vertexAttribPointer(a_position, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_position);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, shape.b_n);
+        gl.bindBuffer(gl.ARRAY_BUFFER, obj.shape.b_n);
         gl.vertexAttribPointer(a_normal, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_normal);
 
-        gl.vertexAttrib3f(a_color, shape.color[0], shape.color[1], shape.color[2]);
+        gl.vertexAttrib3f(a_color, obj.color[0], obj.color[1], obj.color[2]);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.b_i);
-        gl.drawElements(gl.TRIANGLES, shape.indices_length, gl.UNSIGNED_SHORT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.shape.b_i);
+        gl.drawElements(gl.TRIANGLES, obj.shape.indices_length, gl.UNSIGNED_SHORT, 0);
     }
 }
 
-function getShape(cr, cg, cb)
+function getShape0()
 {
     function buffer(x, type)
     {
@@ -88,11 +89,18 @@ function getShape(cr, cg, cb)
 
     return {
         indices: indices,
-        color: [ cr, cg, cb ],
         b_p: buffer(vertices, gl.ARRAY_BUFFER),
         b_n: buffer(normals, gl.ARRAY_BUFFER),
         b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
-        indices_length: indices.length,
+        indices_length: indices.length
+    };
+}
+
+function createObject(shape, cr, cg, cb)
+{
+    return {
+        shape: shape,
+        color: [ cr, cg, cb ],
         ry: 0,
         x: 0,
         y: 0,
@@ -132,9 +140,13 @@ function init() {
     inverseTranspose = gl.getUniformLocation(program, 'i');
 
     shapes = [
-        getShape(1, 0, 0),
-        getShape(0, 1, 0),
-        getShape(0, 0, 1)
+        getShape0()
+    ]
+
+    objects = [
+        createObject(shapes[0],1, 0, 0),
+        createObject(shapes[0],0, 1, 0),
+        createObject(shapes[0],0, 0, 1)
     ];
 
     // Loop
