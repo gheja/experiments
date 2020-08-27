@@ -298,6 +298,75 @@ function lookAt(mat, cameraX, cameraY, cameraZ, targetX, targetY, targetZ, upX =
 
 
 
+function calculateNormals(vertices: Float32Array, indices: Uint16Array): Float32Array
+{
+    let normals: Float32Array;
+    let i: number;
+    let ia: number, ib: number, ic: number;
+    let va, vb, vc;
+    let b;
+    let edgeAB, edgeAC;
+
+    function minus(a: Float32Array, b: Float32Array): Float32Array
+    {
+        return new Float32Array([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
+    }
+
+    function cross(a: Float32Array, b: Float32Array): Float32Array
+    {
+/*
+        cx = aybz − azby
+        cy = azbx − axbz
+        cz = axby − aybx
+*/
+        return new Float32Array([ a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0] ]);
+    }
+
+    function add(a: Float32Array, i, b: Float32Array)
+    {
+/*
+        a[i] = b[0];
+        a[i+1] = b[1];
+        a[i+2] = b[2];
+*/
+        a[i] += b[0];
+        a[i+1] += b[1];
+        a[i+2] += b[2];
+    }
+
+    normals = new Float32Array(vertices.length);
+
+    for (i=0; i<indices.length; i+=3)
+    {
+        ia = indices[i] * 3;
+        ib = indices[i+1] * 3;
+        ic = indices[i+2] * 3;
+        va = [ vertices[ia], vertices[ia + 1], vertices[ia + 2] ];
+        vb = [ vertices[ib], vertices[ib + 1], vertices[ib + 2] ];
+        vc = [ vertices[ic], vertices[ic + 1], vertices[ic + 2] ];
+        edgeAB = minus(vb, va);
+        edgeAC = minus(vc, va);
+        b = cross(edgeAB, edgeAC);
+        add(normals, ia, b);
+        add(normals, ib, b);
+        add(normals, ic, b);
+    }
+
+    for (i=0; i<normals.length; i+=3)
+    {
+        b = Math.sqrt(normals[i]**2 + normals[i+1]**2 + normals[i+2]**2);
+
+        if (b != 0)
+        {
+            normals[i] /= b;
+            normals[i+1] /= b;
+            normals[i+2] /= b;
+        }
+    }
+
+    return normals;
+}
+
 ///// shapes
 // Declare a cube (2x2x2)
 // Returns [vertices (Float32Array), normals (Float32Array), indices (Uint16Array)]
@@ -309,8 +378,7 @@ function lookAt(mat, cameraX, cameraY, cameraZ, targetX, targetY, targetZ, upX =
 //  | |v7---|-|v4
 //  |/      |/
 //  v2------v3
-
-function cube()
+function cube(): [ Float32Array, Float32Array, Uint16Array ]
 {
 
     let vertices = new Float32Array([
@@ -341,6 +409,30 @@ function cube()
     ]);
 
     return [vertices, normals, indices];
+}
+
+function cube2(): [ Float32Array, Uint16Array ]
+{
+
+    let vertices = new Float32Array([
+        1.0, 1.0, 1.0,  -1.0, 1.0, 1.0,  -1.0,-1.0, 1.0,   1.0,-1.0, 1.0, // front
+        1.0, 1.0, 1.0,   1.0,-1.0, 1.0,   1.0,-1.0,-1.0,   1.0, 1.0,-1.0, // right
+        1.0, 1.0, 1.0,   1.0, 1.0,-1.0,  -1.0, 1.0,-1.0,  -1.0, 1.0, 1.0, // up
+        -1.0, 1.0, 1.0,  -1.0, 1.0,-1.0,  -1.0,-1.0,-1.0,  -1.0,-1.0, 1.0, // left
+        -1.0,-1.0,-1.0,   1.0,-1.0,-1.0,   1.0,-1.0, 1.0,  -1.0,-1.0, 1.0, // down
+        1.0,-1.0,-1.0,  -1.0,-1.0,-1.0,  -1.0, 1.0,-1.0,   1.0, 1.0,-1.0  // back
+    ]);
+
+    let indices = new Uint16Array([
+        0, 1, 2,   0, 2, 3,  // front
+        4, 5, 6,   4, 6, 7,  // right
+        8, 9, 10,  8, 10,11, // up
+        12,13,14,  12,14,15, // left
+        16,17,18,  16,18,19, // down
+        20,21,22,  20,22,23  // back
+    ]);
+
+    return [vertices, indices];
 }
 
 // Declare a sphere (customizable precision, radius = 1)
@@ -386,6 +478,12 @@ function sphere(precision = 25)
     }
 
     return [new Float32Array(positions), new Float32Array(positions), new Uint16Array(indices)];
+}
+
+function sphere2()
+{
+    let a = sphere();
+    return [ a[0], a[2] ];
 }
 
 // Declare a pyramid (base: 1x1 square, sides: equilateral triangles)

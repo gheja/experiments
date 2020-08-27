@@ -70,7 +70,7 @@ function tick()
     ticks++;
 
     objects[0].ry += 0.013;
-    objects[1].ry -= 0.017;
+    objects[1].ry -= 0.038;
     objects[2].ry -= 0.022;
     objects[0].x += Math.cos(ticks * 0.05) * 0.05;
     objects[1].y += Math.cos(ticks * 0.03) * 0.05;
@@ -93,14 +93,75 @@ function getShape0()
     }
 
     // Initialize a cube
-    let vertices, normals, indices;
-    [vertices, normals, indices] = cube();
+    let vertices: Float32Array, indices: Uint16Array;
+
+    [vertices, indices] = cube2();
 
     return {
         indices: indices,
         b_p: buffer(vertices, gl.ARRAY_BUFFER),
-        b_n: buffer(normals, gl.ARRAY_BUFFER),
         b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
+        b_n: buffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
+        indices_length: indices.length
+    };
+}
+
+function getShape0debug()
+{
+    function buffer(x, type)
+    {
+        let a;
+
+        a = gl.createBuffer();
+        gl.bindBuffer(type, a);
+        gl.bufferData(type, x, gl.STATIC_DRAW);
+
+        return a;
+    }
+
+    // Initialize a cube
+    let vertices: Float32Array, normals: Float32Array, normals2: Float32Array, indices: Uint16Array;
+
+    // [vertices, indices] = cube2();
+
+    // [vertices, normals, indices] = sphere(50);
+    // [vertices, normals, indices] = pyramid();
+    [vertices, normals, indices] = cube();
+
+    normals2 = calculateNormals(vertices, indices);
+
+    let i;
+    let a = [];
+
+    for (i=0; i<normals.length; i++)
+    {
+        if (Math.abs(normals2[i] - normals[i]) > 0.05)
+        {
+            a.push([ i, normals2[i] - normals[i] ]);
+        }
+    }
+
+    console.log(a);
+    console.log(normals.length);
+
+/*
+    let i;
+    let a = "";
+
+    for (i=0; i<normals.length; i++)
+    {
+        a += i + ";" + normals[i].toFixed(4) + ";" + normals2[i].toFixed(4) + "\n";
+    }
+
+    console.log(a);
+    console.log(normals.length);
+    */
+
+    return {
+        indices: indices,
+        b_p: buffer(vertices, gl.ARRAY_BUFFER),
+        b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
+        b_n: buffer(normals2, gl.ARRAY_BUFFER), // buffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
         indices_length: indices.length
     };
 }
@@ -138,7 +199,7 @@ function init() {
     gl.uniform3f(lightColor, 1, 1, 1);
 
     let lightPosition = gl.getUniformLocation(program, 'lp');
-    gl.uniform3f(lightPosition, 1.5, 1.5, 1.5);
+    gl.uniform3f(lightPosition, 1.5, 1.5, 3);
 
     // Set the ambient light color
     let ambientLight = gl.getUniformLocation(program, 'al');
@@ -149,12 +210,12 @@ function init() {
     ]
 
     objects = [
-        createObject(shapes[0],1, 0, 0),
-        createObject(shapes[0],0, 1, 0),
-        createObject(shapes[0],0, 0, 1)
+        createObject(shapes[0],0.8, 0.1, 0),
+        createObject(shapes[0],0, 0.8, 0.2),
+        createObject(shapes[0],0, 0.3, 0.8)
     ];
 
-    window.setInterval(tick, 16);
+    window.setInterval(tick, 1000/60);
 }
 
 window.addEventListener("load", init);
