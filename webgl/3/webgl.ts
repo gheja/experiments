@@ -6,7 +6,7 @@
 */
 
 // Compile a WebGL program from a vertex shader and a fragment shader
-function compile(gl, vshader, fshader)
+function compile(gl, vshader, fshader): WebGLProgram
 {
     let vs = gl.createShader(gl.VERTEX_SHADER);
     gl.shaderSource(vs, vshader);
