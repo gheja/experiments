@@ -98,7 +98,6 @@ function getShape0()
     [vertices, indices] = cube2();
 
     return {
-        indices: indices,
         b_p: buffer(vertices, gl.ARRAY_BUFFER),
         b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
         b_n: buffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
