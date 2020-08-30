@@ -319,12 +319,6 @@ function cube3(): [ Float32Array, Uint16Array, Uint8Array ]
     return [ vertices, indices, colors ];
 }
 
-// Convert deg in radians
-function deg2rad(angle)
-{
-    return Math.PI * angle / 180;
-}
-
 function createShape(input: Array<number>): [ Float32Array, Uint16Array, Uint8Array ]
 {
     let i: number;
