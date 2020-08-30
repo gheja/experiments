@@ -93,6 +93,7 @@ function getShape0()
 
     for (i in colors)
     {
+        // @ts-ignore
         b = hsla2rgba(...COLOR_PALETTE[colors[i]]);
         colors2.set(b, i * 4);
     }
@@ -160,6 +161,7 @@ function getShape1(input: Array<number>)
     // per face
     for (i=0; i<colors.length; i+=6)
     {
+        // @ts-ignore
         b = hsla2rgba(...fuzzyHsla(COLOR_PALETTE[colors[i]], 0.02));
         colors2.set(b, i * 4);
         colors2.set(b, (i+1) * 4);
