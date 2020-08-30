@@ -113,7 +113,68 @@ function getShape0()
 
     for (i in colors)
     {
-        console.log(i, colors[i]);
+        colors2.set(colorPalette[colors[i]], i * 4);
+    }
+
+    return {
+        b_p: buffer(vertices, gl.ARRAY_BUFFER),
+        b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
+        b_n: buffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
+        b_c: buffer(colors2, gl.ARRAY_BUFFER),
+        indices_length: indices.length
+    };
+}
+
+function getShape1()
+{
+    function buffer(x, type)
+    {
+        let a;
+
+        a = gl.createBuffer();
+        gl.bindBuffer(type, a);
+        gl.bufferData(type, x, gl.STATIC_DRAW);
+
+        return a;
+    }
+
+    // Initialize a cube
+    let vertices: Float32Array, indices: Uint16Array, colors: Uint8Array, colors2: Uint8Array;
+    let i;
+
+/*
+    [ vertices, indices, colors ] = createShape(
+        [
+            asd.SET_SIDES, 4,
+            asd.SET_COLOR, 0,
+            asd.SET_SCALE, 1,
+            asd.CREATE_SLICE, -1, -1,  -1, 1,  1, 1,  1, -1,
+            asd.CREATE_SLICE, -1, -1,  -1, 1,  1, 1,  1, -1,
+        ]
+    );
+*/
+
+    [ vertices, indices, colors ] = createShape(
+        [
+            asd.SET_SIDES, 3,
+            asd.SET_COLOR, 3,
+            asd.SET_SCALE, 0.2,
+            asd.SET_SLICE_SIZE, 3,
+            asd.SET_AUTOCLOSE, 1,
+            asd.CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0,
+            asd.CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
+            asd.SET_COLOR, 1,
+            asd.CREATE_SLICE, -1.5, -1.5, 1.5, -1.5, 1.5, 1.5, -1.5, 1.5,
+            asd.SET_COLOR, 2,
+            asd.CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
+            asd.CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0
+        ]
+    );
+
+    colors2 = new Uint8Array(colors.length * 4);
+
+    for (i in colors)
+    {
         colors2.set(colorPalette[colors[i]], i * 4);
     }
 
@@ -165,7 +226,7 @@ function init() {
     gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
     shapes = [
-        getShape0()
+        getShape1()
     ]
 
     objects = [

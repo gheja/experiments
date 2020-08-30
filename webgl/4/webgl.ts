@@ -325,7 +325,125 @@ function deg2rad(angle)
     return Math.PI * angle / 180;
 }
 
-function createShape()
-{
+enum asd {
+    SET_SCALE,
+    SET_COLOR,
+    SET_SIDES,
+    SET_SLICE_SIZE,
+    CREATE_SLICE,
+    CLOSE,
+    SET_AUTOCLOSE
+}
 
+function createShape(input: Array<number>): [ Float32Array, Uint16Array, Uint8Array ]
+{
+    let i: number;
+    let j: number;
+    let c: number;
+    let n: number;
+    let z1: number, z2: number;
+    let autoclose: boolean;
+    let scale: number;
+    let sides: number;
+    let slice_size: number;
+    let points: Array<Array<number>>;
+    let lastPoints: Array<Array<number>>;
+
+    let vertices: Array<number>;
+    let indices: Array<number>;
+    let colors: Array<number>;
+
+/*
+    vertices = new Float32Array()
+    indices = new Uint16Array
+    colors = new Uint8Array;
+*/
+    scale = 1;
+    slice_size = 1;
+    vertices = [];
+    indices = [];
+    colors = [];
+    points = [];
+    autoclose = true;
+
+    function createTriangleStrip()
+    {
+        let i, j;
+
+        for (i=0; i<points.length - 1; i++)
+        {
+            vertices.push(
+                ...points[i], z2, ...lastPoints[i], z1, ...points[i+1], z2,
+                ...points[i+1], z2, ...lastPoints[i], z1, ...lastPoints[i+1], z1
+            );
+
+            for (j=0; j<6; j++)
+            {
+                // colors.push(...colorPalette[c]);
+                colors.push(c);
+            }
+
+            indices.push(n++, n++, n++, n++, n++, n++);
+        }
+    }
+
+    i = 0;
+    n = 0;
+    z2 = 0;
+
+    while (i<input.length)
+    {
+        switch (input[i++])
+        {
+            case asd.SET_SCALE:
+                scale = input[i++];
+            break;
+
+            case asd.SET_COLOR:
+                c = input[i++];
+            break;
+
+            case asd.SET_SIDES:
+                sides = input[i++];
+                points = [];
+            break;
+
+            case asd.SET_AUTOCLOSE:
+                autoclose = !!input[i++];
+            break;
+
+            case asd.SET_SLICE_SIZE:
+                slice_size = input[i++];
+            break;
+
+            case asd.CREATE_SLICE:
+                lastPoints = points.slice();
+                points = [];
+
+                for (j=0; j<sides+1; j++)
+                {
+                    points.push([ input[i++] * scale, input[i++] * scale ]);
+                }
+
+                if (autoclose)
+                {
+                    points.push(points[0]);
+                }
+
+                if (lastPoints.length > 0)
+                {
+                    z1 = z2;
+                    z2 += slice_size * scale;
+
+                    createTriangleStrip();
+                }
+            break;
+
+            case asd.CLOSE:
+                createTriangleStrip();
+            break;
+        }
+    }
+
+    return [ new Float32Array(vertices), new Uint16Array(indices), new Uint8Array(colors) ];
 }
