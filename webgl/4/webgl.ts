@@ -338,7 +338,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     let n: number;
     let z1: number, z2: number;
     let autoclose: boolean;
-    let scale: number;
+    let scale1: number, scale2: number;
     let sides: number;
     let slice_size: number;
     let points: Array<Array<number>>;
@@ -353,7 +353,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     indices = new Uint16Array
     colors = new Uint8Array;
 */
-    scale = 1;
+    scale2 = 1;
     slice_size = 1;
     vertices = [];
     indices = [];
@@ -368,8 +368,13 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
         for (i=0; i<points.length - 1; i++)
         {
             vertices.push(
-                ...points[i], z2, ...lastPoints[i], z1, ...points[i+1], z2,
-                ...points[i+1], z2, ...lastPoints[i], z1, ...lastPoints[i+1], z1
+                points[i][0] * scale2, points[i][1] * scale2, z2,
+                lastPoints[i][0] * scale1, lastPoints[i][1] * scale1, z1,
+                points[i+1][0] * scale2, points[i+1][1] * scale2, z2,
+
+                points[i+1][0] * scale2, points[i+1][1] * scale2, z2,
+                lastPoints[i][0] * scale1, lastPoints[i][1] * scale1, z1,
+                lastPoints[i+1][0] * scale1, lastPoints[i+1][1] * scale1, z1
             );
 
             for (j=0; j<6; j++)
@@ -380,6 +385,8 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
 
             indices.push(n++, n++, n++, n++, n++, n++);
         }
+
+        scale1 = scale2;
     }
 
     i = 0;
@@ -391,7 +398,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
         switch (input[i++])
         {
             case SHAPE_SET_SCALE:
-                scale = input[i++];
+                scale2 = input[i++];
             break;
 
             case SHAPE_SET_COLOR:
@@ -415,9 +422,9 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 lastPoints = points.slice();
                 points = [];
 
-                for (j=0; j<sides+1; j++)
+                for (j=0; j<sides; j++)
                 {
-                    points.push([ input[i++] * scale, input[i++] * scale ]);
+                    points.push([ input[i++], input[i++] ]);
                 }
 
                 if (autoclose)
@@ -428,7 +435,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 if (lastPoints.length > 0)
                 {
                     z1 = z2;
-                    z2 += slice_size * scale;
+                    z2 += slice_size;
 
                     createTriangleStrip();
                 }
