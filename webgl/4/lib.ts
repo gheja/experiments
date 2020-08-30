@@ -1,4 +1,4 @@
-function hsla2rgba(h, s, l, a)
+function hsla2rgba(h: number, s: number, l: number, a: number): tRgbaArray
 {
     // thanks Mohsen! https://stackoverflow.com/a/9493060/460571
     let p, q, r, g, b;
@@ -32,7 +32,7 @@ function hsla2rgba(h, s, l, a)
 }
 
 // Convert deg in radians
-function deg2rad(angle)
+function deg2rad(angle): number
 {
     return Math.PI * angle / 180;
 }

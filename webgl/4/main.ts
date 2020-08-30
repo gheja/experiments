@@ -130,7 +130,7 @@ function getShape1(input: Array<number>)
         return a;
     }
 
-    function fuzzyHsla(x: Array<number>, y: number): Array<number>
+    function fuzzyHsla(x: tHslaArray, y: number): tHslaArray
     {
         return [
             (x[0] + 1 + y * (Math.random() - 0.5)) % 1,

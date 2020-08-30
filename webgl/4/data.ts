@@ -1,4 +1,4 @@
-const COLOR_PALETTE: Array<Array<number>> = [
+const COLOR_PALETTE: tColorPalette = [
     [ 0.1, 1, 0.5, 255 ],
     [ 0.2, 1, 0.5, 255 ],
     [ 0.3, 1, 0.5, 255 ],
@@ -9,7 +9,7 @@ const COLOR_PALETTE: Array<Array<number>> = [
     [ 0.8, 1, 0.5, 255 ],
 ];
 
-const SHAPE_TEST1 = [
+const SHAPE_TEST1: tShapeDefinition = [
     SHAPE_SET_SIDES, 3,
     SHAPE_SET_COLOR, 0,
     SHAPE_SET_SCALE, 0.2,

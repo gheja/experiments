@@ -256,7 +256,7 @@ function calculateNormals(vertices: Float32Array, indices: Uint16Array): Float32
 //  | |v7---|-|v4
 //  |/      |/
 //  v2------v3
-function cube2(): [ Float32Array, Uint16Array, Uint8Array ]
+function cube2(): tShapeWebglDefinition
 {
     let vertices = new Float32Array([
         1.0, 1.0, 1.0,  -1.0, 1.0, 1.0,  -1.0,-1.0, 1.0,   1.0,-1.0, 1.0, // front
@@ -288,7 +288,7 @@ function cube2(): [ Float32Array, Uint16Array, Uint8Array ]
     return [ vertices, indices, colors ];
 }
 
-function cube3(): [ Float32Array, Uint16Array, Uint8Array ]
+function cube3(): tShapeWebglDefinition
 {
 //    v6----- v5
 //   /|      /|
@@ -319,7 +319,7 @@ function cube3(): [ Float32Array, Uint16Array, Uint8Array ]
     return [ vertices, indices, colors ];
 }
 
-function createShape(input: Array<number>): [ Float32Array, Uint16Array, Uint8Array ]
+function createShape(input: tShapeDefinition): tShapeWebglDefinition
 {
     let i: number;
     let j: number;
