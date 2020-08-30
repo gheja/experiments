@@ -1,4 +1,4 @@
-const colorPalette: Array<Array<number>> = [
+const COLOR_PALETTE: Array<Array<number>> = [
     [ 0.1, 1, 0.5, 255 ],
     [ 0.2, 1, 0.5, 255 ],
     [ 0.3, 1, 0.5, 255 ],
