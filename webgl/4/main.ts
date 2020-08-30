@@ -12,11 +12,21 @@ let shapes;
 let objects;
 let ticks: number = 0;
 
+let cam = {
+    x: 0,
+    y: 0,
+    z: -20,
+    rx: -1.1,
+    ry: 0,
+    rz: 0
+};
+
 function render()
 {
     let obj;
     let modelMatrix: Float32Array;
     let mvpMatrix: Float32Array;
+    let cameraMatrix2: Float32Array;
     let inverseTransposeMatrix: Float32Array;
     let a_position: GLint;
     let a_normal: GLint;
@@ -24,6 +34,8 @@ function render()
     let u_model: WebGLUniformLocation;
     let u_mvp: WebGLUniformLocation;
     let u_inverseTranspose: WebGLUniformLocation;
+
+    cameraMatrix2 = transform(cameraMatrix, cam);
 
     gl.useProgram(program);
 
@@ -44,7 +56,7 @@ function render()
         modelMatrix = transform(modelMatrix, obj);
         gl.uniformMatrix4fv(u_model, false, modelMatrix);
 
-        mvpMatrix = multMat4Mat4(cameraMatrix, modelMatrix);
+        mvpMatrix = multMat4Mat4(cameraMatrix2, modelMatrix);
         gl.uniformMatrix4fv(u_mvp, false, mvpMatrix);
 
         inverseTransposeMatrix = transpose(inverse(modelMatrix));
@@ -71,12 +83,16 @@ function tick()
 {
     ticks++;
 
-    objects[0].ry += 0.013;
-    objects[1].ry -= 0.038;
-    objects[2].ry -= 0.022;
-    objects[0].x += Math.cos(ticks * 0.05) * 0.05;
-    objects[1].y += Math.cos(ticks * 0.03) * 0.05;
-    objects[2].z += Math.cos(ticks * 0.03) * 0.05;
+    /*
+        objects[0].rz += 0.013;
+        objects[1].rz -= 0.038;
+        objects[2].rz -= 0.022;
+        objects[0].x += Math.cos(ticks * 0.05) * 0.05;
+        objects[1].y += Math.cos(ticks * 0.03) * 0.05;
+        objects[2].z += Math.cos(ticks * 0.03) * 0.05;
+    */
+
+    objects[1].rz += 0.01;
 
     render();
 }
@@ -184,7 +200,9 @@ function createObject(shape, cr, cg, cb)
 {
     return {
         shape: shape,
+        rx: 0,
         ry: 0,
+        rz: 0,
         x: 0,
         y: 0,
         z: 0
@@ -202,31 +220,48 @@ function init() {
 
     gl.clearColor(0, 0, 0.2, 1);
     gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.CULL_FACE);
 
     // Set the camera
     cameraMatrix = perspective({ fov: 0.5, aspect: 1, near: 1, far: 100 });
-    cameraMatrix = transform(cameraMatrix, { z: -5 });
+
 
     // Set the point light color and position
     let lightColor = gl.getUniformLocation(program, 'lc');
     gl.uniform3f(lightColor, 1, 1, 1);
 
     let lightPosition = gl.getUniformLocation(program, 'lp');
-    gl.uniform3f(lightPosition, 1.5, 1.5, 3);
+    gl.uniform3f(lightPosition, 3, -20, 20);
 
     // Set the ambient light color
     let ambientLight = gl.getUniformLocation(program, 'al');
     gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
     shapes = [
-        getShape1(SHAPE_TEST1)
-    ]
+        getShape1(SHAPE_PLANE),
+        getShape1(SHAPE_TEST2),
+        getShape1(SHAPE_TEST2),
+        getShape1(SHAPE_TEST2),
+        getShape1(SHAPE_TEST2),
+    ];
 
     objects = [
-        createObject(shapes[0],0.8, 0.1, 0),
-        createObject(shapes[0],0, 0.8, 0.2),
-        createObject(shapes[0],0, 0.3, 0.8)
+        createObject(shapes[0],0, 0, 0),
+        createObject(shapes[1],0, 0, 0),
+        createObject(shapes[2],0, 0, 0),
+        createObject(shapes[3],0, 0, 0),
+        createObject(shapes[4],0, 0, 0)
     ];
+
+    objects[2].rz = 2 * Math.random();
+    objects[3].rz = 2 * Math.random();
+    objects[4].rz = 2 * Math.random();
+
+    objects[2].x += -10;
+    objects[3].x += -5;
+    objects[4].x += 5;
+
+    objects[4].ry = -0.5;
 
     window.setInterval(tick, 1000/60);
 }
