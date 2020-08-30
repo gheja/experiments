@@ -96,7 +96,7 @@ function getShape0()
 
     // Initialize a cube
     let vertices: Float32Array, indices: Uint16Array, colors: Uint8Array, colors2: Uint8Array;
-    let i;
+    let i, b;
 
     [ vertices, indices, colors ] = cube2();
 
@@ -104,7 +104,8 @@ function getShape0()
 
     for (i in colors)
     {
-        colors2.set(colorPalette[colors[i]], i * 4);
+        b = hsla2rgba(...colorPalette[colors[i]]);
+        colors2.set(b, i * 4);
     }
 
     return {
@@ -129,9 +130,19 @@ function getShape1()
         return a;
     }
 
+    function fuzzyHsla(x: Array<number>, y: number): Array<number>
+    {
+        return [
+            (x[0] + 1 + y * (Math.random() - 0.5)) % 1,
+            x[1],
+            x[2],
+            x[3]
+        ];
+    }
+
     // Initialize a cube
     let vertices: Float32Array, indices: Uint16Array, colors: Uint8Array, colors2: Uint8Array;
-    let i;
+    let i, b;
 
 /*
     [ vertices, indices, colors ] = createShape(
@@ -148,7 +159,7 @@ function getShape1()
     [ vertices, indices, colors ] = createShape(
         [
             SHAPE_SET_SIDES, 3,
-            SHAPE_SET_COLOR, 3,
+            SHAPE_SET_COLOR, 0,
             SHAPE_SET_SCALE, 0.2,
             SHAPE_SET_SLICE_SIZE, 3,
             SHAPE_SET_AUTOCLOSE, 1,
@@ -158,15 +169,42 @@ function getShape1()
             SHAPE_CREATE_SLICE, -1.5, -1.5, 1.5, -1.5, 1.5, 1.5, -1.5, 1.5,
             SHAPE_SET_COLOR, 2,
             SHAPE_CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
+            SHAPE_SET_COLOR, 3,
             SHAPE_CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0
         ]
     );
 
     colors2 = new Uint8Array(colors.length * 4);
 
+/*
+    // per vertex
     for (i in colors)
     {
-        colors2.set(colorPalette[colors[i]], i * 4);
+        b = hsla2rgba(...fuzzyHsla(colorPalette[colors[i]], 0.02));
+        colors2.set(b, i * 4);
+    }
+*/
+
+/*
+    // per triangle
+    for (i=0; i<colors.length; i+=3)
+    {
+        b = hsla2rgba(...fuzzyHsla(colorPalette[colors[i]], 0.02));
+        colors2.set(b, i * 4);
+        colors2.set(b, (i+1) * 4);
+        colors2.set(b, (i+2) * 4);
+    }
+*/
+    // per face
+    for (i=0; i<colors.length; i+=6)
+    {
+        b = hsla2rgba(...fuzzyHsla(colorPalette[colors[i]], 0.02));
+        colors2.set(b, i * 4);
+        colors2.set(b, (i+1) * 4);
+        colors2.set(b, (i+2) * 4);
+        colors2.set(b, (i+3) * 4);
+        colors2.set(b, (i+4) * 4);
+        colors2.set(b, (i+5) * 4);
     }
 
     return {

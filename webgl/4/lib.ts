@@ -12,6 +12,7 @@ function hsla2rgba(h, s, l, a)
         if (t < 4/6) return p + (q - p) * 6 * (4/6 - t);
         return p
     }
+
     if (l < 0.5)
     {
         q = l * (1 + s);
