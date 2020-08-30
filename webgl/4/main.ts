@@ -117,7 +117,7 @@ function getShape0()
     };
 }
 
-function getShape1()
+function getShape1(input: Array<number>)
 {
     function buffer(x, type)
     {
@@ -156,23 +156,7 @@ function getShape1()
     );
 */
 
-    [ vertices, indices, colors ] = createShape(
-        [
-            SHAPE_SET_SIDES, 3,
-            SHAPE_SET_COLOR, 0,
-            SHAPE_SET_SCALE, 0.2,
-            SHAPE_SET_SLICE_SIZE, 3,
-            SHAPE_SET_AUTOCLOSE, 1,
-            SHAPE_CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0,
-            SHAPE_CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
-            SHAPE_SET_COLOR, 1,
-            SHAPE_CREATE_SLICE, -1.5, -1.5, 1.5, -1.5, 1.5, 1.5, -1.5, 1.5,
-            SHAPE_SET_COLOR, 2,
-            SHAPE_CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
-            SHAPE_SET_COLOR, 3,
-            SHAPE_CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
-    );
+    [ vertices, indices, colors ] = createShape(input);
 
     colors2 = new Uint8Array(colors.length * 4);
 
@@ -255,7 +239,7 @@ function init() {
     gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
     shapes = [
-        getShape1()
+        getShape1(SHAPE_TEST1)
     ]
 
     objects = [
