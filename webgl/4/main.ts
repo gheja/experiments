@@ -11,15 +11,6 @@ let cameraMatrix: Float32Array;
 let shapes;
 let objects;
 let ticks: number = 0;
-let colorPalette: Array<Array<number>> = [
-    [ 255, 0, 0, 255 ],
-    [ 255, 255, 0, 255 ],
-    [ 0, 255, 0, 255 ],
-    [ 0, 255, 255, 255 ],
-    [ 0, 0, 255, 255 ],
-    [ 255, 0, 255, 255 ],
-    [ 255, 255, 255, 255 ],
-];
 
 function render()
 {
