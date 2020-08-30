@@ -145,29 +145,29 @@ function getShape1()
 /*
     [ vertices, indices, colors ] = createShape(
         [
-            asd.SET_SIDES, 4,
-            asd.SET_COLOR, 0,
-            asd.SET_SCALE, 1,
-            asd.CREATE_SLICE, -1, -1,  -1, 1,  1, 1,  1, -1,
-            asd.CREATE_SLICE, -1, -1,  -1, 1,  1, 1,  1, -1,
+            SHAPE_SET_SIDES, 4,
+            SHAPE_SET_COLOR, 0,
+            SHAPE_SET_SCALE, 1,
+            SHAPE_CREATE_SLICE, -1, -1,  -1, 1,  1, 1,  1, -1,
+            SHAPE_CREATE_SLICE, -1, -1,  -1, 1,  1, 1,  1, -1,
         ]
     );
 */
 
     [ vertices, indices, colors ] = createShape(
         [
-            asd.SET_SIDES, 3,
-            asd.SET_COLOR, 3,
-            asd.SET_SCALE, 0.2,
-            asd.SET_SLICE_SIZE, 3,
-            asd.SET_AUTOCLOSE, 1,
-            asd.CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0,
-            asd.CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
-            asd.SET_COLOR, 1,
-            asd.CREATE_SLICE, -1.5, -1.5, 1.5, -1.5, 1.5, 1.5, -1.5, 1.5,
-            asd.SET_COLOR, 2,
-            asd.CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
-            asd.CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0
+            SHAPE_SET_SIDES, 3,
+            SHAPE_SET_COLOR, 3,
+            SHAPE_SET_SCALE, 0.2,
+            SHAPE_SET_SLICE_SIZE, 3,
+            SHAPE_SET_AUTOCLOSE, 1,
+            SHAPE_CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0,
+            SHAPE_CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
+            SHAPE_SET_COLOR, 1,
+            SHAPE_CREATE_SLICE, -1.5, -1.5, 1.5, -1.5, 1.5, 1.5, -1.5, 1.5,
+            SHAPE_SET_COLOR, 2,
+            SHAPE_CREATE_SLICE, -1, -1, 1, -1, 1, 1, -1, 1,
+            SHAPE_CREATE_SLICE, 0, 0, 0, 0, 0, 0, 0, 0
         ]
     );
 

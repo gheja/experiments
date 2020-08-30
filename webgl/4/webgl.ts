@@ -325,16 +325,6 @@ function deg2rad(angle)
     return Math.PI * angle / 180;
 }
 
-enum asd {
-    SET_SCALE,
-    SET_COLOR,
-    SET_SIDES,
-    SET_SLICE_SIZE,
-    CREATE_SLICE,
-    CLOSE,
-    SET_AUTOCLOSE
-}
-
 function createShape(input: Array<number>): [ Float32Array, Uint16Array, Uint8Array ]
 {
     let i: number;
@@ -395,28 +385,28 @@ function createShape(input: Array<number>): [ Float32Array, Uint16Array, Uint8Ar
     {
         switch (input[i++])
         {
-            case asd.SET_SCALE:
+            case SHAPE_SET_SCALE:
                 scale = input[i++];
             break;
 
-            case asd.SET_COLOR:
+            case SHAPE_SET_COLOR:
                 c = input[i++];
             break;
 
-            case asd.SET_SIDES:
+            case SHAPE_SET_SIDES:
                 sides = input[i++];
                 points = [];
             break;
 
-            case asd.SET_AUTOCLOSE:
+            case SHAPE_SET_AUTOCLOSE:
                 autoclose = !!input[i++];
             break;
 
-            case asd.SET_SLICE_SIZE:
+            case SHAPE_SET_SLICE_SIZE:
                 slice_size = input[i++];
             break;
 
-            case asd.CREATE_SLICE:
+            case SHAPE_CREATE_SLICE:
                 lastPoints = points.slice();
                 points = [];
 
@@ -439,7 +429,7 @@ function createShape(input: Array<number>): [ Float32Array, Uint16Array, Uint8Ar
                 }
             break;
 
-            case asd.CLOSE:
+            case SHAPE_CLOSE:
                 createTriangleStrip();
             break;
         }
