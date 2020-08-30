@@ -245,6 +245,17 @@ function calculateNormals(vertices: Float32Array, indices: Uint16Array): Float32
     return normals;
 }
 
+function glBuffer(x, type)
+{
+    let a;
+
+    a = gl.createBuffer();
+    gl.bindBuffer(type, a);
+    gl.bufferData(type, x, gl.STATIC_DRAW);
+
+    return a;
+}
+
 ///// shapes
 // Declare a cube (2x2x2)
 // Returns [vertices (Float32Array), normals (Float32Array), indices (Uint16Array)]

@@ -83,17 +83,6 @@ function tick()
 
 function getShape0()
 {
-    function buffer(x, type)
-    {
-        let a;
-
-        a = gl.createBuffer();
-        gl.bindBuffer(type, a);
-        gl.bufferData(type, x, gl.STATIC_DRAW);
-
-        return a;
-    }
-
     // Initialize a cube
     let vertices: Float32Array, indices: Uint16Array, colors: Uint8Array, colors2: Uint8Array;
     let i, b;
@@ -109,27 +98,16 @@ function getShape0()
     }
 
     return {
-        b_p: buffer(vertices, gl.ARRAY_BUFFER),
-        b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
-        b_n: buffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
-        b_c: buffer(colors2, gl.ARRAY_BUFFER),
+        b_p: glBuffer(vertices, gl.ARRAY_BUFFER),
+        b_i: glBuffer(indices, gl.ELEMENT_ARRAY_BUFFER),
+        b_n: glBuffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
+        b_c: glBuffer(colors2, gl.ARRAY_BUFFER),
         indices_length: indices.length
     };
 }
 
 function getShape1(input: Array<number>)
 {
-    function buffer(x, type)
-    {
-        let a;
-
-        a = gl.createBuffer();
-        gl.bindBuffer(type, a);
-        gl.bufferData(type, x, gl.STATIC_DRAW);
-
-        return a;
-    }
-
     function fuzzyHsla(x: tHslaArray, y: number): tHslaArray
     {
         return [
@@ -192,10 +170,10 @@ function getShape1(input: Array<number>)
     }
 
     return {
-        b_p: buffer(vertices, gl.ARRAY_BUFFER),
-        b_i: buffer(indices, gl.ELEMENT_ARRAY_BUFFER),
-        b_n: buffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
-        b_c: buffer(colors2, gl.ARRAY_BUFFER),
+        b_p: glBuffer(vertices, gl.ARRAY_BUFFER),
+        b_i: glBuffer(indices, gl.ELEMENT_ARRAY_BUFFER),
+        b_n: glBuffer(calculateNormals(vertices, indices), gl.ARRAY_BUFFER),
+        b_c: glBuffer(colors2, gl.ARRAY_BUFFER),
         indices_length: indices.length
     };
 }
