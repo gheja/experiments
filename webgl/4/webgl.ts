@@ -399,6 +399,11 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
         {
             case SHAPE_SET_SCALE:
                 scale2 = input[i++];
+
+                if(scale1 === undefined)
+                {
+                    scale1 = scale2;
+                }
             break;
 
             case SHAPE_SET_COLOR:
@@ -441,7 +446,28 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 }
             break;
 
+            case SHAPE_REPEAT_SLICE:
+                lastPoints = points.slice();
+
+                z1 = z2;
+                z2 += slice_size;
+
+                createTriangleStrip();
+            break;
+
             case SHAPE_CLOSE:
+                lastPoints = points.slice();
+                points = [];
+                scale2 = 0;
+
+                for (j=0; j<sides; j++)
+                {
+                    points.push([ 0, 0 ]);
+                }
+                if (autoclose)
+                {
+                    points.push(points[0]);
+                }
                 createTriangleStrip();
             break;
         }
