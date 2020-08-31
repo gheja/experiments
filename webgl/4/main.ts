@@ -21,6 +21,8 @@ let cam = {
     rz: 0
 };
 
+let _editor: Editor;
+
 function render()
 {
     let obj;
@@ -249,6 +251,8 @@ function init() {
         createObject(shapes[0],0, 0, 0),
         createObject(shapes[1],0, 0, 0),
     ];
+
+    _editor = new Editor("editor", 1, 1);
 
     window.setInterval(tick, 1000/60);
 }

@@ -1,0 +1,23 @@
+#editor
+{
+    width: 800px;
+    height: 400px;
+    background: #111;
+    color: #ccc;
+    border: none;
+}
+
+#editor.parsing
+{
+    color: #0000cc;
+}
+
+#editor.ok
+{
+    color: #00aa00;
+}
+
+#editor.failed
+{
+    color: #cc0000;
+}
