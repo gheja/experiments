@@ -83,15 +83,6 @@ function tick()
 {
     ticks++;
 
-    /*
-        objects[0].rz += 0.013;
-        objects[1].rz -= 0.038;
-        objects[2].rz -= 0.022;
-        objects[0].x += Math.cos(ticks * 0.05) * 0.05;
-        objects[1].y += Math.cos(ticks * 0.03) * 0.05;
-        objects[2].z += Math.cos(ticks * 0.03) * 0.05;
-    */
-
     objects[1].rz += 0.01;
 
     render();
