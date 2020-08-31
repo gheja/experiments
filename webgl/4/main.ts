@@ -223,7 +223,7 @@ function init() {
     gl.enable(gl.CULL_FACE);
 
     // Set the camera
-    cameraMatrix = perspective({ fov: 0.5, aspect: 1, near: 1, far: 100 });
+    cameraMatrix = perspective({ fov: 0.5, aspect: 1, near: 1, far: 1000 });
 
 
     // Set the point light color and position
@@ -239,29 +239,13 @@ function init() {
 
     shapes = [
         getShape1(SHAPE_PLANE),
-        getShape1(SHAPE_TEST2),
-        getShape1(SHAPE_TEST2),
-        getShape1(SHAPE_TEST2),
-        getShape1(SHAPE_TEST2),
+        getShape1(SHAPE_TRAIN1),
     ];
 
     objects = [
         createObject(shapes[0],0, 0, 0),
         createObject(shapes[1],0, 0, 0),
-        createObject(shapes[2],0, 0, 0),
-        createObject(shapes[3],0, 0, 0),
-        createObject(shapes[4],0, 0, 0)
     ];
-
-    objects[2].rz = 2 * Math.random();
-    objects[3].rz = 2 * Math.random();
-    objects[4].rz = 2 * Math.random();
-
-    objects[2].x += -10;
-    objects[3].x += -5;
-    objects[4].x += 5;
-
-    objects[4].ry = -0.5;
 
     window.setInterval(tick, 1000/60);
 }
