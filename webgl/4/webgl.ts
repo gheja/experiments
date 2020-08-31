@@ -341,6 +341,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     let scale1: number, scale2: number;
     let sides: number;
     let slice_size: number;
+    let mirror_x: boolean;
     let points: Array<Array<number>>;
     let lastPoints: Array<Array<number>>;
 
@@ -360,6 +361,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     colors = [];
     points = [];
     autoclose = true;
+    mirror_x = false;
 
     function createTriangleStrip()
     {
@@ -423,6 +425,10 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 slice_size = input[i++];
             break;
 
+            case SHAPE_SET_MIRROR_X:
+                mirror_x = !!input[i++];
+            break;
+
             case SHAPE_CREATE_SLICE:
                 lastPoints = points.slice();
                 points = [];
@@ -432,7 +438,14 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                     points.push([ input[i++], input[i++] ]);
                 }
 
-                if (autoclose)
+                if (mirror_x)
+                {
+                    for (j = points.length - 1; j >= 0; j--)
+                    {
+                        points.push([ points[j][0] * -1, points[j][1] ]);
+                    }
+                }
+                else if (autoclose)
                 {
                     points.push(points[0]);
                 }
