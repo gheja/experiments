@@ -187,6 +187,18 @@ function getShape1(input: Array<number>)
     };
 }
 
+function destroyShape(index)
+{
+    let shape;
+
+    shape = shapes[index];
+    gl.deleteBuffer(shape.b_p);
+    gl.deleteBuffer(shape.b_i);
+    gl.deleteBuffer(shape.b_n);
+    gl.deleteBuffer(shape.b_c);
+    shapes[index] = null;
+}
+
 function createObject(shape, cr, cg, cb)
 {
     return {
