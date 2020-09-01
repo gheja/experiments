@@ -35,7 +35,7 @@ class Editor
 
         try
         {
-            input = eval("[ " + this.getTextareaData() + "]");
+            input = eval("[\n" + this.getTextareaData() + "\n]");
             shape = getShape1(input);
         }
         catch (e)
