@@ -380,6 +380,11 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
         z1 = z2;
         z2 += slice_size;
 
+        if (scale1 === undefined)
+        {
+            scale1 = scale2;
+        }
+
         for (i=0; i<points.length - 1; i++)
         {
             vertices.push(
@@ -414,11 +419,6 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
         {
             case SHAPE_SET_SCALE:
                 scale2 = input[i++];
-
-                if(scale1 === undefined)
-                {
-                    scale1 = scale2;
-                }
             break;
 
             case SHAPE_SET_COLOR:
@@ -509,6 +509,9 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
 
             case SHAPE_GOTO:
                 [ dx, dy, dz, rx, ry, rz ] = [ input[i++], input[i++], input[i++], input[i++], input[i++], input[i++] ];
+
+                scale2 = undefined;
+                scale1 = undefined;
 
                 z1 = z2 = dz;
             break;
