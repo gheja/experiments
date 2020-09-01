@@ -351,6 +351,9 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     let indices: Array<number>;
     let colors: Array<number>;
 
+    let copying: boolean;
+    let copy_begin, copy_end, copy_return;
+
 /*
     vertices = new Float32Array()
     indices = new Uint16Array
@@ -364,6 +367,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     points = [];
     autoclose = true;
     mirror_x = false;
+    copying = false;
 
     let dx, dy, dz, rx, ry, rz;
 
@@ -481,6 +485,26 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 {
                     points.push([ Math.cos(j/sides * Math.PI * 2) * l, Math.sin(j/sides * Math.PI * 2) * l ]);
                 }
+            break;
+
+            case SHAPE_COPY_BEGIN:
+                copy_begin = i;
+            break;
+
+            case SHAPE_COPY_END:
+                copy_end = i;
+
+                if (copying)
+                {
+                    copying = false;
+                    i = copy_return;
+                }
+            break;
+
+            case SHAPE_COPY_PASTE:
+                copying = true;
+                copy_return = i;
+                i = copy_begin;
             break;
 
             case SHAPE_GOTO:

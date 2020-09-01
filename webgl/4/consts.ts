@@ -9,3 +9,6 @@ const SHAPE_REPEAT_SLICE = 8;
 const SHAPE_SET_MIRROR_X = 9;
 const SHAPE_CIRCLE = 10;
 const SHAPE_GOTO = 11;
+const SHAPE_COPY_BEGIN = 12;
+const SHAPE_COPY_END = 13;
+const SHAPE_COPY_PASTE = 14;
