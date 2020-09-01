@@ -40,6 +40,7 @@ class Editor
         }
         catch (e)
         {
+            console.log(e);
             this.textareaDom.className = "failed";
             return;
         }
