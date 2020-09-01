@@ -334,6 +334,8 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
 {
     let i: number;
     let j: number;
+    let k: number;
+    let l: number;
     let c: number;
     let n: number;
     let z1: number, z2: number;
@@ -363,20 +365,27 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     autoclose = true;
     mirror_x = false;
 
+    let dx, dy, dz, rx, ry, rz;
+
+    dx = dy = dz = rx = ry = rz = 0;
+
     function createTriangleStrip()
     {
         let i, j;
 
+        z1 = z2;
+        z2 += slice_size;
+
         for (i=0; i<points.length - 1; i++)
         {
             vertices.push(
-                points[i][0] * scale2, points[i][1] * scale2, z2,
-                lastPoints[i][0] * scale1, lastPoints[i][1] * scale1, z1,
-                points[i+1][0] * scale2, points[i+1][1] * scale2, z2,
+                points[i][0] * scale2 + dx, points[i][1] * scale2 + dy, z2,
+                lastPoints[i][0] * scale1 + dx, lastPoints[i][1] * scale1 + dy, z1,
+                points[i+1][0] * scale2 + dx, points[i+1][1] * scale2 + dy, z2,
 
-                points[i+1][0] * scale2, points[i+1][1] * scale2, z2,
-                lastPoints[i][0] * scale1, lastPoints[i][1] * scale1, z1,
-                lastPoints[i+1][0] * scale1, lastPoints[i+1][1] * scale1, z1
+                points[i+1][0] * scale2 + dx, points[i+1][1] * scale2 + dy, z2,
+                lastPoints[i][0] * scale1 + dx, lastPoints[i][1] * scale1 + dy, z1,
+                lastPoints[i+1][0] * scale1 + dx, lastPoints[i+1][1] * scale1 + dy, z1
             );
 
             for (j=0; j<6; j++)
@@ -452,9 +461,6 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
 
                 if (lastPoints.length > 0)
                 {
-                    z1 = z2;
-                    z2 += slice_size;
-
                     createTriangleStrip();
                 }
             break;
@@ -462,26 +468,25 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
             case SHAPE_REPEAT_SLICE:
                 lastPoints = points.slice();
 
-                z1 = z2;
-                z2 += slice_size;
-
                 createTriangleStrip();
             break;
 
-            case SHAPE_CLOSE:
-                lastPoints = points.slice();
+            case SHAPE_CIRCLE:
                 points = [];
-                scale2 = 0;
 
-                for (j=0; j<sides; j++)
+                sides = input[i++];
+                l = input[i++];
+
+                for (j=0; j<=sides; j++)
                 {
-                    points.push([ 0, 0 ]);
+                    points.push([ Math.cos(j/sides * Math.PI * 2) * l, Math.sin(j/sides * Math.PI * 2) * l ]);
                 }
-                if (autoclose)
-                {
-                    points.push(points[0]);
-                }
-                createTriangleStrip();
+            break;
+
+            case SHAPE_GOTO:
+                [ dx, dy, dz, rx, ry, rz ] = [ input[i++], input[i++], input[i++], input[i++], input[i++], input[i++] ];
+
+                z1 = z2 = dz;
             break;
         }
     }
