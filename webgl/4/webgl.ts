@@ -342,7 +342,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     let autoclose: boolean;
     let scale1: number, scale2: number;
     let sides: number;
-    let slice_size: number;
+    let slice_height: number;
     let mirror_x: boolean;
     let points: Array<Array<number>>;
     let lastPoints: Array<Array<number>>;
@@ -360,7 +360,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
     colors = new Uint8Array;
 */
     scale2 = 1;
-    slice_size = 1;
+    slice_height = 1;
     vertices = [];
     indices = [];
     colors = [];
@@ -378,7 +378,7 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
         let i, j;
 
         z1 = z2;
-        z2 += slice_size;
+        z2 += slice_height;
 
         if (scale1 === undefined)
         {
@@ -434,15 +434,15 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 autoclose = !!input[i++];
             break;
 
-            case SHAPE_SET_SLICE_SIZE:
-                slice_size = input[i++];
+            case SHAPE_SLICE_SET_HEIGHT:
+                slice_height = input[i++];
             break;
 
             case SHAPE_SET_MIRROR_X:
                 mirror_x = !!input[i++];
             break;
 
-            case SHAPE_CREATE_SLICE:
+            case SHAPE_SLICE_POINTS:
                 lastPoints = points.slice();
                 points = [];
 
@@ -469,13 +469,13 @@ function createShape(input: tShapeDefinition): tShapeWebglDefinition
                 }
             break;
 
-            case SHAPE_REPEAT_SLICE:
+            case SHAPE_SLICE_REPEAT:
                 lastPoints = points.slice();
 
                 createTriangleStrip();
             break;
 
-            case SHAPE_CIRCLE:
+            case SHAPE_SLICE_CIRCLE:
                 points = [];
 
                 sides = input[i++];
