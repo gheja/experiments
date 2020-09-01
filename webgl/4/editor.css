@@ -3,7 +3,7 @@
     width: 800px;
     height: 400px;
     background: #111;
-    color: #ccc;
+    color: #aaa;
     border: none;
 }
 
@@ -14,7 +14,7 @@
 
 #editor.ok
 {
-    color: #00aa00;
+    color: #0a0;
 }
 
 #editor.failed
