@@ -3,9 +3,11 @@ class Editor
     textareaDom: HTMLTextAreaElement = null;
     shapeIndex: number;
     objectIndex: number;
+    gfx: WebglGfx;
 
-    constructor(id, shapeIndex, objectIndex)
+    constructor(gfx, id, shapeIndex, objectIndex)
     {
+        this.gfx = gfx;
         this.textareaDom = (document.getElementById(id) as HTMLTextAreaElement);
         this.textareaDom.addEventListener("keyup", this.onTextareaUpdate.bind(this));
         this.shapeIndex = shapeIndex;
@@ -36,7 +38,7 @@ class Editor
         try
         {
             input = eval("[\n" + this.getTextareaData() + "\n]");
-            shape = getShape1(input);
+            shape = this.gfx.getShape1(input);
         }
         catch (e)
         {
@@ -45,14 +47,14 @@ class Editor
             return;
         }
 
-        destroyShape(this.shapeIndex);
-        shapes[this.shapeIndex] = shape;
-        objects[this.objectIndex].shape = shapes[this.shapeIndex];
+        this.gfx.destroyShape(this.shapeIndex);
+        this.gfx.shapes[this.shapeIndex] = shape;
+        this.gfx.objects[this.objectIndex].shape = this.gfx.shapes[this.shapeIndex];
         this.textareaDom.className = "ok";
         this.saveToLocalstorage();
     }
 
-    onTextareaUpdate(event: Event)
+    onTextareaUpdate()
     {
         this.updateFromTextarea();
     }
@@ -61,7 +63,7 @@ class Editor
     {
         let a;
 
-        a = localStorage.getItem("webgl:4:latest_model");
+        a = localStorage.getItem("webgl:5:latest_model");
 
         if (a === null)
         {
@@ -143,6 +145,6 @@ SHAPE_SLICE_REPEAT,
 
     saveToLocalstorage()
     {
-        localStorage.setItem("webgl:4:latest_model", this.getTextareaData())
+        localStorage.setItem("webgl:5:latest_model", this.getTextareaData())
     }
 }
