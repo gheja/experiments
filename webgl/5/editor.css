@@ -1,10 +1,25 @@
+#editor_box
+{
+    display: none;
+}
+
 #editor
 {
-    width: 800px;
-    height: 400px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 600px;
     background: #111;
     color: #aaa;
     border: none;
+    opacity: 0.2;
+}
+
+#editor:hover,
+#editor:focus
+{
+    opacity: 1;
 }
 
 #editor.parsing
