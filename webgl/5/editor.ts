@@ -1,6 +1,6 @@
 class Editor
 {
-    textareaDom: HTMLTextAreaElement = null;
+    textarea: HTMLTextAreaElement = null;
     shapeIndex: number;
     objectIndex: number;
     gfx: WebglGfx;
@@ -8,8 +8,8 @@ class Editor
     constructor(gfx, id, shapeIndex, objectIndex)
     {
         this.gfx = gfx;
-        this.textareaDom = (document.getElementById(id) as HTMLTextAreaElement);
-        this.textareaDom.addEventListener("keyup", this.onTextareaUpdate.bind(this));
+        this.textarea = (document.getElementById(id) as HTMLTextAreaElement);
+        this.textarea.addEventListener("keyup", this.onTextareaUpdate.bind(this));
         this.shapeIndex = shapeIndex;
         this.objectIndex = objectIndex;
 
@@ -19,17 +19,17 @@ class Editor
 
     getTextareaData()
     {
-        return this.textareaDom.value;
+        return this.textarea.value;
     }
 
     setTextareaData(a: string)
     {
-        this.textareaDom.value = a;
+        this.textarea.value = a;
     }
 
     updateFromTextarea()
     {
-        this.textareaDom.className = "parsing";
+        this.textarea.className = "parsing";
 
         let input, shape;
 
@@ -43,14 +43,14 @@ class Editor
         catch (e)
         {
             console.log(e);
-            this.textareaDom.className = "failed";
+            this.textarea.className = "failed";
             return;
         }
 
         this.gfx.destroyShape(this.shapeIndex);
         this.gfx.shapes[this.shapeIndex] = shape;
         this.gfx.objects[this.objectIndex].shape = this.gfx.shapes[this.shapeIndex];
-        this.textareaDom.className = "ok";
+        this.textarea.className = "ok";
         this.saveToLocalstorage();
     }
 
