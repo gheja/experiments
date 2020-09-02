@@ -8,51 +8,16 @@ class WebglGfx extends WebglBase
     constructor(id: string)
     {
         super(id);
+        init();
+    }
 
-        let vshader: string;
-        let fshader: string;
+    onResize()
+    {
+        this.canvas.width = this.canvas.clientWidth | 0;
+        this.canvas.height = this.canvas.clientHeight | 0;
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
 
-        vshader = `attribute vec4 p,c,n;uniform mat4 m,o,i;varying vec4 vc;varying vec3 vn,vp;void main(){gl_Position=m*p;vp=vec3(o*p);vn=normalize(vec3(i*n));vc=c;}`;
-        fshader = `precision mediump float;uniform vec3 lc,lp,al;varying vec3 vn,vp;varying vec4 vc;void main(){vec3 l=normalize(lp-vp);float n=max(dot(l,vn),0.0);vec3 q=lc*vc.rgb*n+al*vc.rgb;gl_FragColor=vec4(q,1.0);}`;
-        program = this.compile(vshader, fshader);
-
-        this.cam = {
-            x: 0,
-            y: 0,
-            z: -20,
-            rx: -1.1,
-            ry: 0,
-            rz: 0
-        };
-
-
-        this.gl.clearColor(0, 0, 0.2, 1);
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.enable(this.gl.CULL_FACE);
-
-        // Set the camera
-        this.cameraMatrix = mat4Perspective({ fov: 0.5, ratio: 1, near: 1, far: 1000 });
-
-        // Set the point light color and position
-        let lightColor = this.gl.getUniformLocation(program, 'lc');
-        this.gl.uniform3f(lightColor, 1, 1, 1);
-
-        let lightPosition = this.gl.getUniformLocation(program, 'lp');
-        this.gl.uniform3f(lightPosition, 3, -20, 20);
-
-        // Set the ambient light color
-        let ambientLight = this.gl.getUniformLocation(program, 'al');
-        this.gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
-
-        this.shapes = [
-            this.getShape1(SHAPE_PLANE),
-            this.getShape1(SHAPE_TRAIN1),
-        ];
-
-        this.objects = [
-            this.createObject(this.shapes[0]),
-            this.createObject(this.shapes[1]),
-        ];
+        this.cameraMatrix = mat4Perspective({ fov: 0.5, ratio: this.canvas.width / this.canvas.height, near: 1, far: 1000 });
     }
 
     createShape(input: tShapeDefinition): tShapeWebglDefinition
@@ -367,5 +332,53 @@ class WebglGfx extends WebglBase
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, obj.shape.b_i);
             this.gl.drawElements(this.gl.TRIANGLES, obj.shape.indices_length, this.gl.UNSIGNED_SHORT, 0);
         }
+    }
+
+    init()
+    {
+        let vshader: string;
+        let fshader: string;
+
+        vshader = `attribute vec4 p,c,n;uniform mat4 m,o,i;varying vec4 vc;varying vec3 vn,vp;void main(){gl_Position=m*p;vp=vec3(o*p);vn=normalize(vec3(i*n));vc=c;}`;
+        fshader = `precision mediump float;uniform vec3 lc,lp,al;varying vec3 vn,vp;varying vec4 vc;void main(){vec3 l=normalize(lp-vp);float n=max(dot(l,vn),0.0);vec3 q=lc*vc.rgb*n+al*vc.rgb;gl_FragColor=vec4(q,1.0);}`;
+        program = this.compile(vshader, fshader);
+
+        this.cam = {
+            x: 0,
+            y: 0,
+            z: -20,
+            rx: -1.1,
+            ry: 0,
+            rz: 0
+        };
+
+
+        this.gl.clearColor(0, 0, 0.2, 1);
+        this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl.enable(this.gl.CULL_FACE);
+
+        // Set the point light color and position
+        let lightColor = this.gl.getUniformLocation(program, 'lc');
+        this.gl.uniform3f(lightColor, 1, 1, 1);
+
+        let lightPosition = this.gl.getUniformLocation(program, 'lp');
+        this.gl.uniform3f(lightPosition, 3, -20, 20);
+
+        // Set the ambient light color
+        let ambientLight = this.gl.getUniformLocation(program, 'al');
+        this.gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
+
+        this.shapes = [
+            this.getShape1(SHAPE_PLANE),
+            this.getShape1(SHAPE_TRAIN1),
+        ];
+
+        this.objects = [
+            this.createObject(this.shapes[0]),
+            this.createObject(this.shapes[1]),
+        ];
+
+        window.addEventListener("resize", this.onResize.bind(this));
+        this.onResize();
     }
 }
