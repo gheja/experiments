@@ -40,15 +40,13 @@ class WebglGfx extends WebglBase
         let ambientLight = this.gl.getUniformLocation(program, 'al');
         this.gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
-        this.shapes = [
-            this.getShape1(SHAPE_PLANE),
-            this.getShape1(SHAPE_TRAIN1),
-        ];
+        this.shapes = [];
+        this.addShape(SHAPE_PLANE);
+        this.addShape(SHAPE_TRAIN1);
 
-        this.objects = [
-            this.createObject(this.shapes[0]),
-            this.createObject(this.shapes[1]),
-        ];
+        this.objects = [];
+        this.createObject(this.shapes[0]);
+        this.createObject(this.shapes[1]);
 
         window.addEventListener("resize", this.onResize.bind(this));
         this.onResize();
@@ -63,7 +61,7 @@ class WebglGfx extends WebglBase
         this.cameraMatrix = mat4Perspective({ fov: 0.5, ratio: this.canvas.width / this.canvas.height, near: 1, far: 1000 });
     }
 
-    createShape(input: tShapeDefinition): tShapeWebglDefinition
+    buildShape(input: tShapeDefinition): tShapeWebglDefinition
     {
         let i: number;
         let j: number;
@@ -249,7 +247,9 @@ class WebglGfx extends WebglBase
         return [ new Float32Array(vertices), new Uint16Array(indices), new Uint8Array(colors) ];
     }
 
-    getShape1(input: Array<number>)
+    // should be merged with addShape() but the editor needs to build a shape and
+    // not add to this.shapes
+    buildShape2(input: Array<number>)
     {
         function fuzzyHsla(x: tHslaArray, y: number): tHslaArray
         {
@@ -267,7 +267,7 @@ class WebglGfx extends WebglBase
         let colors2: Uint8Array;
         let i, b;
 
-        [ vertices, indices, colors ] = this.createShape(input);
+        [ vertices, indices, colors ] = this.buildShape(input);
 
         colors2 = new Uint8Array(colors.length * 4);
 
@@ -293,6 +293,13 @@ class WebglGfx extends WebglBase
         };
     }
 
+    addShape(input: Array<number>)
+    {
+        this.shapes.push(this.buildShape2(input));
+
+        return this.shapes[this.shapes.length - 1];
+    }
+
     destroyShape(index)
     {
         let shape;
@@ -308,7 +315,7 @@ class WebglGfx extends WebglBase
 
     createObject(shape)
     {
-        return {
+        this.objects.push({
             shape: shape,
             rx: 0,
             ry: 0,
@@ -316,7 +323,9 @@ class WebglGfx extends WebglBase
             x: 0,
             y: 0,
             z: 0
-        };
+        });
+
+        return this.objects[this.objects.length];
     }
 
     render()

@@ -38,7 +38,7 @@ class Editor
         try
         {
             input = eval("[\n" + this.getTextareaData() + "\n]");
-            shape = this.gfx.getShape1(input);
+            shape = this.gfx.buildShape2(input);
         }
         catch (e)
         {
