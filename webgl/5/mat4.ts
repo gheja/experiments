@@ -9,6 +9,9 @@ type tMat4 = Float32Array;
 type tMat4PerspectiveOptions = { fov: number, ratio: number, near: number, far: number };
 type tMat4TransformOptions = { x: number, y: number, z: number, rx: number, ry: number, rz: number, sx: number, sy: number, sz: number };
 
+type tVec3 = Float32Array;
+type tVec4 = Float32Array;
+
 // Create an identity mat4
 function mat4Identity(): tMat4
 {
@@ -163,4 +166,14 @@ function mat4Inverse(m: tMat4): tMat4
         inv[i] *= det;
     }
     return inv;
+}
+
+function vec3Minus(a: tVec3, b: tVec3): tVec3
+{
+    return new Float32Array([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
+}
+
+function vec3Cross(a: tVec3, b: tVec3): tVec3
+{
+    return new Float32Array([a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]);
 }

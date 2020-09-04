@@ -50,21 +50,6 @@ class WebglBase
         let b;
         let edgeAB, edgeAC;
 
-        function minus(a: Float32Array, b: Float32Array): Float32Array
-        {
-            return new Float32Array([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
-        }
-
-        function cross(a: Float32Array, b: Float32Array): Float32Array
-        {
-            /*
-                    cx = aybz − azby
-                    cy = azbx − axbz
-                    cz = axby − aybx
-            */
-            return new Float32Array([a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]);
-        }
-
         function add(a: Float32Array, i: number, b: Float32Array)
         {
             a[i] += b[0];
@@ -83,9 +68,9 @@ class WebglBase
             va = [vertices[ia], vertices[ia + 1], vertices[ia + 2]];
             vb = [vertices[ib], vertices[ib + 1], vertices[ib + 2]];
             vc = [vertices[ic], vertices[ic + 1], vertices[ic + 2]];
-            edgeAB = minus(vb, va);
-            edgeAC = minus(vc, va);
-            b = cross(edgeAB, edgeAC);
+            edgeAB = vec3Minus(vb, va);
+            edgeAC = vec3Minus(vc, va);
+            b = vec3Cross(edgeAB, edgeAC);
             add(normals, ia, b);
             add(normals, ib, b);
             add(normals, ic, b);
