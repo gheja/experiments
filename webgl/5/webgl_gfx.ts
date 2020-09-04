@@ -396,5 +396,21 @@ class WebglGfx extends WebglBase
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, obj.shape.b_i);
             this.gl.drawElements(this.gl.TRIANGLES, obj.shape.indices_length, this.gl.UNSIGNED_SHORT, 0);
         }
+
+    }
+    // based on glhUnProjectf()
+    // https://www.khronos.org/opengl/wiki/GluProject_and_gluUnProject_code
+    unproject(input: tVec3)
+    {
+        let output: tVec4;
+
+        output = mat4MulVec3(mat4Transpose(mat4Inverse(this.viewProjectionMatrix)), input);
+
+        if (output[3] == 0)
+        {
+            return null;
+        }
+
+        return vec3MulScalar(output, 1 / output[3]);
     }
 }
