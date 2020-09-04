@@ -168,12 +168,56 @@ function mat4Inverse(m: tMat4): tMat4
     return inv;
 }
 
+/*
+function vec4Zero()
+{
+    return new Float32Array([ 0, 0, 0, 0 ]);
+}
+*/
+
+function mat4MulVec3(m: tMat4, v: tVec3): tVec4
+{
+    return new Float32Array([
+        m[0]*v[0]  + m[1]*v[1]  + m[2]*v[2]  + m[3],
+        m[4]*v[0]  + m[5]*v[1]  + m[6]*v[2]  + m[7],
+        m[8]*v[0]  + m[9]*v[1]  + m[10]*v[2] + m[11],
+        m[12]*v[0] + m[13]*v[1] + m[14]*v[2] + m[15]
+    ]);
+}
+
+/*
+function mat4MulVec4(m: tMat4, v: tVec4): tVec4
+{
+    return new Float32Array([
+        m[0]*v[0]  + m[1]*v[1]  + m[2]*v[2]  + m[3]*v[3],
+        m[4]*v[0]  + m[5]*v[1]  + m[6]*v[2]  + m[7]*v[3],
+        m[8]*v[0]  + m[9]*v[1]  + m[10]*v[2] + m[11]*v[3],
+        m[12]*v[0] + m[13]*v[1] + m[14]*v[2] + m[15]*v[3]
+    ]);
+}
+*/
+
 function vec3Minus(a: tVec3, b: tVec3): tVec3
 {
     return new Float32Array([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
 }
 
+function vec3Plus(a: tVec3, b: tVec3)
+{
+    return new Float32Array([ a[0] + b[0], a[1] + b[1], a[2] + b[2] ]);
+}
+
 function vec3Cross(a: tVec3, b: tVec3): tVec3
 {
     return new Float32Array([a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]);
+}
+
+function vec3Dot(a: tVec3, b: tVec3): number
+{
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function vec3MulScalar(a: tVec3, b: number): tVec3
+{
+    return new Float32Array([ a[0] * b, a[1] * b, a[2] * b ]);
 }
