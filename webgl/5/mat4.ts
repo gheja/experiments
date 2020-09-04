@@ -7,7 +7,7 @@
 
 type tMat4 = Float32Array;
 type tMat4PerspectiveOptions = { fov: number, ratio: number, near: number, far: number };
-type tMat4TransformOptions = { x: number, y: number, z: number, rx: number, ry: number, rz: number, sx: number, sy: number, sz: number };
+type tMat4TransformOptions = { x?: number, y?: number, z?: number, rx?: number, ry?: number, rz?: number, sx?: number, sy?: number, sz?: number };
 
 type tVec3 = Float32Array;
 type tVec4 = Float32Array;
