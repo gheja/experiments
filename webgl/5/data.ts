@@ -69,3 +69,16 @@ const SHAPE_TRAIN1: tShapeDefinition = [
     SHAPE_SLICE_POINTS, -5, 27, -5, 20, -3, 20, -3, 8, -5, 8, -5, 5, 0, 0,
     SHAPE_SLICE_POINTS, -5, 27, -5, 20, 0, 20, 0, 8, 0, 7, 0, 6, 0, 5,
 ];
+
+const SHAPE_CURSOR: tShapeDefinition = [
+    SHAPE_SET_SCALE, 1,
+    SHAPE_SLICE_SET_HEIGHT, 0.5,
+    SHAPE_SET_COLOR, 3,
+    SHAPE_SLICE_CIRCLE, 13, 2,
+    SHAPE_SLICE_REPEAT,
+    SHAPE_SET_SCALE, 0.8,
+    SHAPE_SLICE_SET_HEIGHT, 0,
+    SHAPE_SLICE_REPEAT,
+    SHAPE_SLICE_SET_HEIGHT, -0.5,
+    SHAPE_SLICE_REPEAT,
+];

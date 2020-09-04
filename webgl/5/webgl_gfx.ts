@@ -49,10 +49,12 @@ class WebglGfx extends WebglBase
         this.shapes = [];
         this.addShape(SHAPE_PLANE);
         this.addShape(SHAPE_TRAIN1);
+        this.addShape(SHAPE_CURSOR);
 
         this.objects = [];
         this.createObject(this.shapes[0]);
         this.createObject(this.shapes[1]);
+        this.createObject(this.shapes[2]);
 
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
     }
@@ -79,6 +81,8 @@ class WebglGfx extends WebglBase
 
     updateCursorPosition()
     {
+        // TODO: rewrite/optimize this
+        
         let a, b, c;
 
         a = this.unproject(new Float32Array([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 0 ]));
@@ -105,6 +109,10 @@ class WebglGfx extends WebglBase
         }
 
         this.cursorWorldPosition = c;
+
+        this.objects[2].x = c[0];
+        this.objects[2].y = c[1];
+        this.objects[2].z = c[2];
     }
 
     buildShape(input: tShapeDefinition): tShapeWebglDefinition
