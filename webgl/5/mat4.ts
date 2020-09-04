@@ -221,3 +221,50 @@ function vec3MulScalar(a: tVec3, b: number): tVec3
 {
     return new Float32Array([ a[0] * b, a[1] * b, a[2] * b ]);
 }
+
+// Based on Möller–Trumbore intersection algorithm
+// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+function getLineTriangleIntersection(lineOrigin: tVec3, lineVector: tVec3, p1: tVec3, p2: tVec3, p3: tVec3): tVec3 | null
+{
+    let edge1 = vec3Minus(p2, p1);
+    let edge2 = vec3Minus(p3, p1);
+
+    let h = vec3Cross(lineVector, edge2);
+    let a = vec3Dot(edge1, h);
+
+    if (a > -EPSILON && a < EPSILON)
+    {
+        // This ray is parallel to this triangle.
+        return null;
+    }
+
+    let f = 1 / a;
+    let s = vec3Minus(lineOrigin, p1);
+    let u = f * vec3Dot(s, h);
+
+    if (u < 0.0 || u > 1.0)
+    {
+        // ?
+        return null;
+    }
+
+    let q = vec3Cross(s, edge1);
+    let v = f * vec3Dot(lineVector, q);
+
+    if (v < 0.0 || u + v > 1.0)
+    {
+        // ?
+        return null;
+    }
+
+    // At this stage we can compute t to find out where the intersection point is on the line.
+    let t = f * vec3Dot(edge2, q);
+
+    if (t <= EPSILON)
+    {
+        // This means that there is a line intersection but not a ray intersection.
+        return null;
+    }
+
+    return vec3Plus(lineOrigin, vec3MulScalar(lineVector, t));
+}

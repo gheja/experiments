@@ -15,3 +15,5 @@ const SHAPE_COPY_PASTE = 14;
 
 const WEBGL_NEAR = 0.01;
 const WEBGL_FAR = 1000;
+
+const EPSILON = 0.0000001;
