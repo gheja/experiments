@@ -7,6 +7,8 @@ class WebglGfx extends WebglBase
     viewMatrix: tMat4;
     projectionMatrix: tMat4;
     viewProjectionMatrix: tMat4;
+    cursorScreenPosition: Array<number>;
+    cursorWorldPosition: tVec3;
 
     constructor(id: string)
     {
@@ -27,6 +29,7 @@ class WebglGfx extends WebglBase
             rz: 0
         };
 
+        this.cursorScreenPosition = [ 0, 0 ];
 
         this.gl.clearColor(0, 0, 0.2, 1);
         this.gl.enable(this.gl.DEPTH_TEST);
@@ -50,6 +53,8 @@ class WebglGfx extends WebglBase
         this.objects = [];
         this.createObject(this.shapes[0]);
         this.createObject(this.shapes[1]);
+
+        this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
     }
 
     resize()
@@ -70,6 +75,36 @@ class WebglGfx extends WebglBase
             this.gl.viewport(0, 0, width, height);
             this.projectionMatrix = mat4Perspective({ fov: 0.5, ratio: width / height, near: WEBGL_NEAR, far: WEBGL_FAR });
         }
+    }
+
+    updateCursorPosition()
+    {
+        let a, b, c;
+
+        a = this.unproject(new Float32Array([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 0 ]));
+        b = this.unproject(new Float32Array([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 1 ]));
+
+        if (!a || !b)
+        {
+            return;
+        }
+
+        // a huge dummy triangle instead of ground for now
+
+        c = getLineTriangleIntersection(
+            a,
+            vec3Minus(b, a),
+            new Float32Array([ 0, 2000, 0 ]),
+            new Float32Array([ -2000, -2000, 0 ]),
+            new Float32Array([ 2000, -2000, 0 ])
+        );
+
+        if (!c)
+        {
+            return;
+        }
+
+        this.cursorWorldPosition = c;
     }
 
     buildShape(input: tShapeDefinition): tShapeWebglDefinition
@@ -356,6 +391,8 @@ class WebglGfx extends WebglBase
         this.viewMatrix = mat4Inverse(this.cameraMatrix);
         this.viewProjectionMatrix = mat4MulMat4(this.projectionMatrix, this.viewMatrix);
 
+        this.updateCursorPosition();
+
         this.gl.useProgram(program);
 
         a_position = this.gl.getAttribLocation(program, "p");
@@ -396,8 +433,8 @@ class WebglGfx extends WebglBase
             this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, obj.shape.b_i);
             this.gl.drawElements(this.gl.TRIANGLES, obj.shape.indices_length, this.gl.UNSIGNED_SHORT, 0);
         }
-
     }
+
     // based on glhUnProjectf()
     // https://www.khronos.org/opengl/wiki/GluProject_and_gluUnProject_code
     unproject(input: tVec3)
@@ -412,5 +449,13 @@ class WebglGfx extends WebglBase
         }
 
         return vec3MulScalar(output, 1 / output[3]);
+    }
+
+    onMouseMove(event: MouseEvent)
+    {
+        this.cursorScreenPosition = [
+            (event.clientX / this.canvas.clientWidth) * 2 - 1,
+            - ((event.clientY / this.canvas.clientHeight) * 2 - 1)
+        ];
     }
 }
