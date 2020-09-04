@@ -12,3 +12,6 @@ const SHAPE_GOTO = 11;
 const SHAPE_COPY_BEGIN = 12;
 const SHAPE_COPY_END = 13;
 const SHAPE_COPY_PASTE = 14;
+
+const WEBGL_NEAR = 0.01;
+const WEBGL_FAR = 1000;

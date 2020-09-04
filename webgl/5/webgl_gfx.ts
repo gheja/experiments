@@ -4,6 +4,9 @@ class WebglGfx extends WebglBase
     shapes: Array<any>;
     cam: any;
     cameraMatrix: tMat4;
+    viewMatrix: tMat4;
+    projectionMatrix: tMat4;
+    viewProjectionMatrix: tMat4;
 
     constructor(id: string)
     {
@@ -18,8 +21,8 @@ class WebglGfx extends WebglBase
         this.cam = {
             x: 0,
             y: 0,
-            z: -20,
-            rx: -1.1,
+            z: 10,
+            rx: 0,
             ry: 0,
             rz: 0
         };
@@ -47,18 +50,26 @@ class WebglGfx extends WebglBase
         this.objects = [];
         this.createObject(this.shapes[0]);
         this.createObject(this.shapes[1]);
-
-        window.addEventListener("resize", this.onResize.bind(this));
-        this.onResize();
     }
 
-    onResize()
+    resize()
     {
-        this.canvas.width = this.canvas.clientWidth | 0;
-        this.canvas.height = this.canvas.clientHeight | 0;
-        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        let width;
+        let height;
 
-        this.cameraMatrix = mat4Perspective({ fov: 0.5, ratio: this.canvas.width / this.canvas.height, near: 1, far: 1000 });
+        width = this.canvas.clientWidth;
+        height = this.canvas.clientHeight;
+
+        if (this.canvas.width != width || this.canvas.height != height)
+        {
+            this.canvas.width = width;
+            this.canvas.height = height;
+
+            // maybe this is the correct one?
+            // this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+            this.gl.viewport(0, 0, width, height);
+            this.projectionMatrix = mat4Perspective({ fov: 0.5, ratio: width / height, near: WEBGL_NEAR, far: WEBGL_FAR });
+        }
     }
 
     buildShape(input: tShapeDefinition): tShapeWebglDefinition
@@ -333,7 +344,6 @@ class WebglGfx extends WebglBase
         let obj;
         let modelMatrix: Float32Array;
         let mvpMatrix: Float32Array;
-        let cameraMatrix2: Float32Array;
         let inverseTransposeMatrix: Float32Array;
         let a_position: GLint;
         let a_normal: GLint;
@@ -342,7 +352,9 @@ class WebglGfx extends WebglBase
         let u_mvp: WebGLUniformLocation;
         let u_inverseTranspose: WebGLUniformLocation;
 
-        cameraMatrix2 = mat4Transform(this.cameraMatrix, this.cam);
+        this.cameraMatrix = mat4Transform(mat4Identity(), this.cam);
+        this.viewMatrix = mat4Inverse(this.cameraMatrix);
+        this.viewProjectionMatrix = mat4MulMat4(this.projectionMatrix, this.viewMatrix);
 
         this.gl.useProgram(program);
 
@@ -363,7 +375,7 @@ class WebglGfx extends WebglBase
             modelMatrix = mat4Transform(modelMatrix, obj);
             this.gl.uniformMatrix4fv(u_model, false, modelMatrix);
 
-            mvpMatrix = mat4MulMat4(cameraMatrix2, modelMatrix);
+            mvpMatrix = mat4MulMat4(this.viewProjectionMatrix, modelMatrix);
             this.gl.uniformMatrix4fv(u_mvp, false, mvpMatrix);
 
             inverseTransposeMatrix = mat4Transpose(mat4Inverse(modelMatrix));

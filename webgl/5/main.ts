@@ -10,6 +10,7 @@ function tick()
 
     _gfx.objects[1].rz += 0.01;
 
+    _gfx.resize();
     _gfx.render();
     window.requestAnimationFrame(tick);
 }
