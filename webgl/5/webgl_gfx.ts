@@ -1,3 +1,5 @@
+// TODO: merge with class WebglBase?
+
 class WebglGfx extends WebglBase
 {
     objects: Array<any>;

@@ -5,7 +5,6 @@
     Thanks Xem!
 */
 
-
 class WebglBase
 {
     gl: WebGLRenderingContext;
