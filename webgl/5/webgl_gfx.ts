@@ -1,4 +1,9 @@
-// TODO: merge with class WebglBase?
+/*
+    This code started out from Xem's WebGL guide.
+    https://xem.github.io/articles/webgl-guide.html
+
+    Thanks Xem!
+*/
 
 class WebglGfx
 {
