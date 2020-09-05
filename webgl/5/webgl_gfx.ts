@@ -303,7 +303,7 @@ class WebglGfx extends WebglBase
 
     // should be merged with addShape() but the editor needs to build a shape and
     // not add to this.shapes
-    buildShape2(input: Array<number>)
+    buildShape2(input: tShapeDefinition)
     {
         function fuzzyHsla(x: tHslaArray, y: number): tHslaArray
         {
@@ -347,7 +347,7 @@ class WebglGfx extends WebglBase
         };
     }
 
-    addShape(input: Array<number>)
+    addShape(input: tShapeDefinition)
     {
         this.shapes.push(this.buildShape2(input));
 
@@ -451,7 +451,7 @@ class WebglGfx extends WebglBase
 
     // based on glhUnProjectf()
     // https://www.khronos.org/opengl/wiki/GluProject_and_gluUnProject_code
-    unproject(input: tVec3)
+    unproject(input: tVec3): tVec3
     {
         let output: tVec4;
 

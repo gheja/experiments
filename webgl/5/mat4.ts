@@ -3,6 +3,8 @@
     https://xem.github.io/articles/webgl-guide.html
 
     Thanks Xem!
+
+    And of course, on Wikipedia and mathsisfun.com
 */
 
 type tMat4 = Float32Array;
@@ -12,7 +14,7 @@ type tMat4Transform2Options = { x:number, y:number, z:number, rx:number, ry:numb
 type tVec3 = Float32Array;
 type tVec4 = Float32Array;
 
-function F32A(x: Array<number>|Float32Array):Float32Array
+function F32A(x: Array<number>|Float32Array): Float32Array
 {
     return new Float32Array(x);
 }
@@ -210,7 +212,7 @@ function vec3Minus(a: tVec3, b: tVec3): tVec3
     return F32A([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
 }
 
-function vec3Plus(a: tVec3, b: tVec3)
+function vec3Plus(a: tVec3, b: tVec3): tVec3
 {
     return F32A([ a[0] + b[0], a[1] + b[1], a[2] + b[2] ]);
 }
@@ -232,6 +234,7 @@ function vec3MulScalar(a: tVec3, b: number): tVec3
 
 // Based on Möller–Trumbore intersection algorithm
 // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+// TODO: optimize for size
 function getLineTriangleIntersection(lineOrigin: tVec3, lineVector: tVec3, p1: tVec3, p2: tVec3, p3: tVec3): tVec3
 {
     let edge1 = vec3Minus(p2, p1);
