@@ -6,16 +6,21 @@
 */
 
 type tMat4 = Float32Array;
-type tMat4PerspectiveOptions = { fov: number, ratio: number, near: number, far: number };
-type tMat4TransformOptions = { x?: number, y?: number, z?: number, rx?: number, ry?: number, rz?: number, sx?: number, sy?: number, sz?: number };
+type tMat4TransformOptions = { x:number, y:number, z:number, rx:number, ry:number, rz:number, sx:number, sy:number, sz:number };
+type tMat4Transform2Options = { x:number, y:number, z:number, rx:number, ry:number, rz:number };
 
 type tVec3 = Float32Array;
 type tVec4 = Float32Array;
 
+function F32A(x: Array<number>|Float32Array):Float32Array
+{
+    return new Float32Array(x);
+}
+
 // Create an identity mat4
 function mat4Identity(): tMat4
 {
-    return new Float32Array([
+    return F32A([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -44,15 +49,11 @@ function mat4MulMat4(a: tMat4, b: tMat4): tMat4
 
 // Create a perspective matrix
 // options: fov, aspect, near, far
-function mat4Perspective(options: tMat4PerspectiveOptions): tMat4
+function mat4Perspective(fov: number, aspect: number, near: number, far: number): tMat4
 {
-    let fov = options.fov || 1.5;
-    let aspect = options.ratio || 1; // canvas.width / canvas.height
-    let near = options.near || 0.01; // can't be 0
-    let far = options.far || 100;
     let f = 1 / Math.tan(fov);
     let nf = 1 / (near - far);
-    return new Float32Array([
+    return F32A([
         f / aspect, 0, 0, 0,
         0, f, 0, 0,
         0, 0, (far + near) * nf, -1,
@@ -60,69 +61,76 @@ function mat4Perspective(options: tMat4PerspectiveOptions): tMat4
     ]);
 }
 
+// Create a perspective matrix v2
+function mat4Perspective2(aspect: number): tMat4
+{
+    let f = 1.83; // == 1 / Math.tan(0.5)
+    let nf = 1 / (WEBGL_NEAR - WEBGL_FAR);
+    return F32A([
+        f / aspect, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, (WEBGL_FAR + WEBGL_NEAR) * nf, -1,
+        0, 0, (2 * WEBGL_NEAR * WEBGL_FAR) * nf, 0
+    ]);
+}
 // Transform a mat4
 // options: x/y/z (translate), rx/ry/rz (rotate), sx/sy/sz (scale)
 function mat4Transform(m: tMat4, options: tMat4TransformOptions): tMat4
 {
+    let out = F32A(m);
 
-    let out = new Float32Array(m);
-
-    let x = options.x || 0;
-    let y = options.y || 0;
-    let z = options.z || 0;
-
-    let sx = options.sx || 1;
-    let sy = options.sy || 1;
-    let sz = options.sz || 1;
-
-    let rx = options.rx;
-    let ry = options.ry;
-    let rz = options.rz;
-
-    // translate
-    if (x || y || z)
-    {
-        out[12] += out[0] * x + out[4] * y + out[8] * z;
-        out[13] += out[1] * x + out[5] * y + out[9] * z;
-        out[14] += out[2] * x + out[6] * y + out[10] * z;
-        out[15] += out[3] * x + out[7] * y + out[11] * z;
-    }
+    // Translate
+    out[12] += out[0] * options.x + out[4] * options.y + out[8] * options.z;
+    out[13] += out[1] * options.x + out[5] * options.y + out[9] * options.z;
+    out[14] += out[2] * options.x + out[6] * options.y + out[10] * options.z;
+    out[15] += out[3] * options.x + out[7] * options.y + out[11] * options.z;
 
     // Rotate
-    if (rx) out.set(mat4MulMat4(out, new Float32Array([1, 0, 0, 0, 0, Math.cos(rx), Math.sin(rx), 0, 0, -Math.sin(rx), Math.cos(rx), 0, 0, 0, 0, 1])));
-    if (ry) out.set(mat4MulMat4(out, new Float32Array([Math.cos(ry), 0, -Math.sin(ry), 0, 0, 1, 0, 0, Math.sin(ry), 0, Math.cos(ry), 0, 0, 0, 0, 1])));
-    if (rz) out.set(mat4MulMat4(out, new Float32Array([Math.cos(rz), Math.sin(rz), 0, 0, -Math.sin(rz), Math.cos(rz), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])));
+    out.set(mat4MulMat4(out, F32A([1, 0, 0, 0, 0, Math.cos(options.rx), Math.sin(options.rx), 0, 0, -Math.sin(options.rx), Math.cos(options.rx), 0, 0, 0, 0, 1])));
+    out.set(mat4MulMat4(out, F32A([Math.cos(options.ry), 0, -Math.sin(options.ry), 0, 0, 1, 0, 0, Math.sin(options.ry), 0, Math.cos(options.ry), 0, 0, 0, 0, 1])));
+    out.set(mat4MulMat4(out, F32A([Math.cos(options.rz), Math.sin(options.rz), 0, 0, -Math.sin(options.rz), Math.cos(options.rz), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])));
 
     // Scale
-    if (sx !== 1)
-    {
-        out[0] *= sx;
-        out[1] *= sx;
-        out[2] *= sx;
-        out[3] *= sx;
-    }
-    if (sy !== 1)
-    {
-        out[4] *= sy;
-        out[5] *= sy;
-        out[6] *= sy;
-        out[7] *= sy;
-    }
-    if (sz !== 1)
-    {
-        out[8] *= sz;
-        out[9] *= sz;
-        out[10] *= sz;
-        out[11] *= sz;
-    }
+    out[0] *= options.sx;
+    out[1] *= options.sx;
+    out[2] *= options.sx;
+    out[3] *= options.sx;
+
+    out[4] *= options.sy;
+    out[5] *= options.sy;
+    out[6] *= options.sy;
+    out[7] *= options.sy;
+
+    out[8] *= options.sz;
+    out[9] *= options.sz;
+    out[10] *= options.sz;
+    out[11] *= options.sz;
 
     return out;
 }
 
+// Transform a mat4
+function mat4Transform2(m: tMat4, options: tMat4Transform2Options): tMat4
+{
+    let out = F32A(m);
+
+    // Translate
+    out[12] += out[0] * options.x + out[4] * options.y + out[8] * options.z;
+    out[13] += out[1] * options.x + out[5] * options.y + out[9] * options.z;
+    out[14] += out[2] * options.x + out[6] * options.y + out[10] * options.z;
+    out[15] += out[3] * options.x + out[7] * options.y + out[11] * options.z;
+
+    // Rotate
+    out.set(mat4MulMat4(out, F32A([1, 0, 0, 0, 0, Math.cos(options.rx), Math.sin(options.rx), 0, 0, -Math.sin(options.rx), Math.cos(options.rx), 0, 0, 0, 0, 1])));
+    out.set(mat4MulMat4(out, F32A([Math.cos(options.ry), 0, -Math.sin(options.ry), 0, 0, 1, 0, 0, Math.sin(options.ry), 0, Math.cos(options.ry), 0, 0, 0, 0, 1])));
+    out.set(mat4MulMat4(out, F32A([Math.cos(options.rz), Math.sin(options.rz), 0, 0, -Math.sin(options.rz), Math.cos(options.rz), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])));
+
+    return out;
+}
 // Get the transposed of a mat4
 function mat4Transpose(m: tMat4): tMat4
 {
-    return new Float32Array([
+    return F32A([
         m[0], m[4], m[8], m[12],
         m[1], m[5], m[9], m[13],
         m[2], m[6], m[10], m[14],
@@ -136,7 +144,7 @@ function mat4Inverse(m: tMat4): tMat4
 {
     let inv, det, i;
 
-    inv = new Float32Array( [
+    inv = F32A( [
          m[5]*m[10]*m[15]  - m[5]*m[11]*m[14]  - m[9]*m[6]*m[15]  + m[9]*m[7]*m[14]  + m[13]*m[6]*m[11]  - m[13]*m[7]*m[10],
         -m[1]*m[10]*m[15]  + m[1]*m[11]*m[14]  + m[9]*m[2]*m[15]  - m[9]*m[3]*m[14]  - m[13]*m[2]*m[11]  + m[13]*m[3]*m[10],
          m[1]*m[6]*m[15]   - m[1]*m[7]*m[14]   - m[5]*m[2]*m[15]  + m[5]*m[3]*m[14]  + m[13]*m[2]*m[7]   - m[13]*m[3]*m[6],
@@ -171,13 +179,13 @@ function mat4Inverse(m: tMat4): tMat4
 /*
 function vec4Zero()
 {
-    return new Float32Array([ 0, 0, 0, 0 ]);
+    return F32A([ 0, 0, 0, 0 ]);
 }
 */
 
 function mat4MulVec3(m: tMat4, v: tVec3): tVec4
 {
-    return new Float32Array([
+    return F32A([
         m[0]*v[0]  + m[1]*v[1]  + m[2]*v[2]  + m[3],
         m[4]*v[0]  + m[5]*v[1]  + m[6]*v[2]  + m[7],
         m[8]*v[0]  + m[9]*v[1]  + m[10]*v[2] + m[11],
@@ -188,7 +196,7 @@ function mat4MulVec3(m: tMat4, v: tVec3): tVec4
 /*
 function mat4MulVec4(m: tMat4, v: tVec4): tVec4
 {
-    return new Float32Array([
+    return F32A([
         m[0]*v[0]  + m[1]*v[1]  + m[2]*v[2]  + m[3]*v[3],
         m[4]*v[0]  + m[5]*v[1]  + m[6]*v[2]  + m[7]*v[3],
         m[8]*v[0]  + m[9]*v[1]  + m[10]*v[2] + m[11]*v[3],
@@ -199,17 +207,17 @@ function mat4MulVec4(m: tMat4, v: tVec4): tVec4
 
 function vec3Minus(a: tVec3, b: tVec3): tVec3
 {
-    return new Float32Array([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
+    return F32A([ a[0] - b[0], a[1] - b[1], a[2] - b[2] ]);
 }
 
 function vec3Plus(a: tVec3, b: tVec3)
 {
-    return new Float32Array([ a[0] + b[0], a[1] + b[1], a[2] + b[2] ]);
+    return F32A([ a[0] + b[0], a[1] + b[1], a[2] + b[2] ]);
 }
 
 function vec3Cross(a: tVec3, b: tVec3): tVec3
 {
-    return new Float32Array([a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]);
+    return F32A([a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]);
 }
 
 function vec3Dot(a: tVec3, b: tVec3): number
@@ -219,7 +227,7 @@ function vec3Dot(a: tVec3, b: tVec3): number
 
 function vec3MulScalar(a: tVec3, b: number): tVec3
 {
-    return new Float32Array([ a[0] * b, a[1] * b, a[2] * b ]);
+    return F32A([ a[0] * b, a[1] * b, a[2] * b ]);
 }
 
 // Based on Möller–Trumbore intersection algorithm

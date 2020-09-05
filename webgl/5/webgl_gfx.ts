@@ -75,7 +75,7 @@ class WebglGfx extends WebglBase
             // maybe this is the correct one?
             // this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
             this.gl.viewport(0, 0, width, height);
-            this.projectionMatrix = mat4Perspective({ fov: 0.5, ratio: width / height, near: WEBGL_NEAR, far: WEBGL_FAR });
+            this.projectionMatrix = mat4Perspective2(width / height);
         }
     }
 
@@ -85,8 +85,8 @@ class WebglGfx extends WebglBase
         
         let a, b, c;
 
-        a = this.unproject(new Float32Array([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 0 ]));
-        b = this.unproject(new Float32Array([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 1 ]));
+        a = this.unproject(F32A([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 0 ]));
+        b = this.unproject(F32A([ this.cursorScreenPosition[0], this.cursorScreenPosition[1], 1 ]));
 
         if (!a || !b)
         {
@@ -98,9 +98,9 @@ class WebglGfx extends WebglBase
         c = getLineTriangleIntersection(
             a,
             vec3Minus(b, a),
-            new Float32Array([ 0, 2000, 0 ]),
-            new Float32Array([ -2000, -2000, 0 ]),
-            new Float32Array([ 2000, -2000, 0 ])
+            F32A([ 0, 2000, 0 ]),
+            F32A([ -2000, -2000, 0 ]),
+            F32A([ 2000, -2000, 0 ])
         );
 
         if (!c)
@@ -298,7 +298,7 @@ class WebglGfx extends WebglBase
             }
         }
 
-        return [ new Float32Array(vertices), new Uint16Array(indices), new Uint8Array(colors) ];
+        return [ F32A(vertices), new Uint16Array(indices), new Uint8Array(colors) ];
     }
 
     // should be merged with addShape() but the editor needs to build a shape and
@@ -401,7 +401,7 @@ class WebglGfx extends WebglBase
         let u_mvp: WebGLUniformLocation;
         let u_inverseTranspose: WebGLUniformLocation;
 
-        this.cameraMatrix = mat4Transform(mat4Identity(), this.cam);
+        this.cameraMatrix = mat4Transform2(mat4Identity(), this.cam);
         this.viewMatrix = mat4Inverse(this.cameraMatrix);
         this.viewProjectionMatrix = mat4MulMat4(this.projectionMatrix, this.viewMatrix);
 
@@ -423,7 +423,7 @@ class WebglGfx extends WebglBase
         {
             modelMatrix = mat4Identity();
             // obj has x, y, z, rx, ry, rz just like transform() requires in options
-            modelMatrix = mat4Transform(modelMatrix, obj);
+            modelMatrix = mat4Transform2(modelMatrix, obj);
             this.gl.uniformMatrix4fv(u_model, false, modelMatrix);
 
             mvpMatrix = mat4MulMat4(this.viewProjectionMatrix, modelMatrix);
