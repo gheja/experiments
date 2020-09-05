@@ -386,7 +386,15 @@ class WebglGfx
                 break;
 
                 case SHAPE_GOTO:
-                    [dx, dy, dz, rx, ry, rz] = [input[i++], input[i++], input[i++], input[i++], input[i++], input[i++]];
+                    // NOTE: tscc in current build script compiles to <ES6 so this assignment becomes ugly and long
+                    // [ dx, dy, dz, rx, ry, rz ] = [ input[i++], input[i++], input[i++], input[i++], input[i++], input[i++] ];
+
+                    dx = input[i++];
+                    dy = input[i++];
+                    dz = input[i++];
+                    rx = input[i++];
+                    ry = input[i++];
+                    rz = input[i++];
 
                     scale2 = undefined;
                     scale1 = undefined;
