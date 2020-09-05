@@ -67,13 +67,13 @@ function mat4Transform(m: tMat4, options: tMat4TransformOptions): tMat4
 
     let out = new Float32Array(m);
 
-    let x = options.x ?? 0;
-    let y = options.y ?? 0;
-    let z = options.z ?? 0;
+    let x = options.x || 0;
+    let y = options.y || 0;
+    let z = options.z || 0;
 
-    let sx = options.sx ?? 1;
-    let sy = options.sy ?? 1;
-    let sz = options.sz ?? 1;
+    let sx = options.sx || 1;
+    let sy = options.sy || 1;
+    let sz = options.sz || 1;
 
     let rx = options.rx;
     let ry = options.ry;
@@ -224,7 +224,7 @@ function vec3MulScalar(a: tVec3, b: number): tVec3
 
 // Based on Möller–Trumbore intersection algorithm
 // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
-function getLineTriangleIntersection(lineOrigin: tVec3, lineVector: tVec3, p1: tVec3, p2: tVec3, p3: tVec3): tVec3 | null
+function getLineTriangleIntersection(lineOrigin: tVec3, lineVector: tVec3, p1: tVec3, p2: tVec3, p3: tVec3): tVec3
 {
     let edge1 = vec3Minus(p2, p1);
     let edge2 = vec3Minus(p3, p1);

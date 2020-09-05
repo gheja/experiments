@@ -14,7 +14,7 @@ class WebglBase
     constructor(id: string)
     {
         this.canvas = (document.getElementById(id) as HTMLCanvasElement);
-        this.gl = this.canvas.getContext("webgl");
+        this.gl = (this.canvas.getContext("webgl") as WebGLRenderingContext);
     }
 
     // Compile a WebGL program from a vertex shader and a fragment shader

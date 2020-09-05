@@ -329,7 +329,7 @@ class WebglGfx extends WebglBase
         for (i = 0; i < colors.length; i += 6)
         {
             // @ts-ignore
-            b = hsla2rgba(...fuzzyHsla([...COLOR_PALETTE[colors[i]], 255], 0.02));
+            b = hsla2rgba(...COLOR_PALETTE[colors[i]], 1);
             colors2.set(b, i * 4);
             colors2.set(b, (i + 1) * 4);
             colors2.set(b, (i + 2) * 4);
@@ -388,9 +388,15 @@ class WebglGfx extends WebglBase
         let modelMatrix: Float32Array;
         let mvpMatrix: Float32Array;
         let inverseTransposeMatrix: Float32Array;
+/*
+        // TODO: tscc is not aware of some WebGL types - replacing them here
         let a_position: GLint;
         let a_normal: GLint;
         let a_color: GLint;
+*/
+        let a_position: number;
+        let a_normal: number;
+        let a_color: number;
         let u_model: WebGLUniformLocation;
         let u_mvp: WebGLUniformLocation;
         let u_inverseTranspose: WebGLUniformLocation;

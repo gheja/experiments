@@ -17,3 +17,6 @@ const WEBGL_NEAR = 0.01;
 const WEBGL_FAR = 1000;
 
 const EPSILON = 0.0000001;
+
+// TODO: to reduce size WebGL consts should be added here so they will be
+// replaced by their numeric values by closure compiler
