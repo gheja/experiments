@@ -1,4 +1,3 @@
-let program: WebGLProgram;
 let ticks = 0;
 
 let _gfx: WebglGfx;

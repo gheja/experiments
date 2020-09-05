@@ -11,6 +11,7 @@ class WebglGfx extends WebglBase
     viewProjectionMatrix: tMat4;
     cursorScreenPosition: Array<number>;
     cursorWorldPosition: tVec3;
+    program: WebGLProgram;
 
     constructor(id: string)
     {
@@ -20,7 +21,7 @@ class WebglGfx extends WebglBase
 
         vshader = `attribute vec4 p,c,n;uniform mat4 m,o,i;varying vec4 vc;varying vec3 vn,vp;void main(){gl_Position=m*p;vp=vec3(o*p);vn=normalize(vec3(i*n));vc=c;}`;
         fshader = `precision mediump float;uniform vec3 lc,lp,al;varying vec3 vn,vp;varying vec4 vc;void main(){vec3 l=normalize(lp-vp);float n=max(dot(l,vn),0.0);vec3 q=lc*vc.rgb*n+al*vc.rgb;gl_FragColor=vec4(q,1.0);}`;
-        program = this.compile(vshader, fshader);
+        this.program = this.compile(vshader, fshader);
 
         this.cam = {
             x: 0,
@@ -38,14 +39,14 @@ class WebglGfx extends WebglBase
         this.gl.enable(this.gl.CULL_FACE);
 
         // Set the point light color and position
-        let lightColor = this.gl.getUniformLocation(program, 'lc');
+        let lightColor = this.gl.getUniformLocation(this.program, 'lc');
         this.gl.uniform3f(lightColor, 1, 1, 1);
 
-        let lightPosition = this.gl.getUniformLocation(program, 'lp');
+        let lightPosition = this.gl.getUniformLocation(this.program, 'lp');
         this.gl.uniform3f(lightPosition, 3, -20, 20);
 
         // Set the ambient light color
-        let ambientLight = this.gl.getUniformLocation(program, 'al');
+        let ambientLight = this.gl.getUniformLocation(this.program, 'al');
         this.gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
         this.shapes = [];
@@ -409,15 +410,15 @@ class WebglGfx extends WebglBase
 
         this.updateCursorPosition();
 
-        this.gl.useProgram(program);
+        this.gl.useProgram(this.program);
 
-        a_position = this.gl.getAttribLocation(program, "p");
-        a_normal = this.gl.getAttribLocation(program, "n");
-        a_color = this.gl.getAttribLocation(program, "c");
+        a_position = this.gl.getAttribLocation(this.program, "p");
+        a_normal = this.gl.getAttribLocation(this.program, "n");
+        a_color = this.gl.getAttribLocation(this.program, "c");
 
-        u_model = this.gl.getUniformLocation(program, 'o');
-        u_mvp = this.gl.getUniformLocation(program, 'm');
-        u_inverseTranspose = this.gl.getUniformLocation(program, 'i');
+        u_model = this.gl.getUniformLocation(this.program, 'o');
+        u_mvp = this.gl.getUniformLocation(this.program, 'm');
+        u_inverseTranspose = this.gl.getUniformLocation(this.program, 'i');
 
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
