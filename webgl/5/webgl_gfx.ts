@@ -1,7 +1,9 @@
 // TODO: merge with class WebglBase?
 
-class WebglGfx extends WebglBase
+class WebglGfx
 {
+    gl: WebGLRenderingContext;
+    canvas: HTMLCanvasElement;
     objects: Array<any>;
     shapes: Array<any>;
     cam: any;
@@ -15,9 +17,11 @@ class WebglGfx extends WebglBase
 
     constructor(id: string)
     {
-        super(id);
         let vshader: string;
         let fshader: string;
+
+        this.canvas = (document.getElementById(id) as HTMLCanvasElement);
+        this.gl = (this.canvas.getContext("webgl") as WebGLRenderingContext);
 
         vshader = `attribute vec4 p,c,n;uniform mat4 m,o,i;varying vec4 vc;varying vec3 vn,vp;void main(){gl_Position=m*p;vp=vec3(o*p);vn=normalize(vec3(i*n));vc=c;}`;
         fshader = `precision mediump float;uniform vec3 lc,lp,al;varying vec3 vn,vp;varying vec4 vc;void main(){vec3 l=normalize(lp-vp);float n=max(dot(l,vn),0.0);vec3 q=lc*vc.rgb*n+al*vc.rgb;gl_FragColor=vec4(q,1.0);}`;
@@ -60,6 +64,30 @@ class WebglGfx extends WebglBase
         this.createObject(this.shapes[2]);
 
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
+    }
+
+    // Compile a WebGL program from a vertex shader and a fragment shader
+    compile(vshader: string, fshader: string): WebGLProgram
+    {
+        let vs = this.gl.createShader(this.gl.VERTEX_SHADER);
+        this.gl.shaderSource(vs, vshader);
+        this.gl.compileShader(vs);
+
+        let fs = this.gl.createShader(this.gl.FRAGMENT_SHADER);
+        this.gl.shaderSource(fs, fshader);
+        this.gl.compileShader(fs);
+
+        let program = this.gl.createProgram();
+        this.gl.attachShader(program, vs);
+        this.gl.attachShader(program, fs);
+        this.gl.linkProgram(program);
+        this.gl.useProgram(program);
+
+        console.log('vertex shader:', this.gl.getShaderInfoLog(vs) || 'OK');
+        console.log('fragment shader:', this.gl.getShaderInfoLog(fs) || 'OK');
+        console.log('program:', this.gl.getProgramInfoLog(program) || 'OK');
+
+        return program;
     }
 
     resize()
@@ -116,6 +144,68 @@ class WebglGfx extends WebglBase
         this.objects[2].x = c[0];
         this.objects[2].y = c[1];
         this.objects[2].z = c[2];
+    }
+
+    createBuffer(x: any, type: number)
+    {
+        let a;
+
+        a = this.gl.createBuffer();
+        this.gl.bindBuffer(type, a);
+        this.gl.bufferData(type, x, this.gl.STATIC_DRAW);
+
+        return a;
+    }
+
+    calculateNormals(vertices: Float32Array, indices: Uint16Array): Float32Array
+    {
+        let normals: Float32Array;
+        let i: number;
+        let ia: number, ib: number, ic: number;
+        let va, vb, vc;
+        let b;
+        let edgeAB, edgeAC;
+
+        function add(a: Float32Array, i: number, b: Float32Array)
+        {
+            a[i] += b[0];
+            a[i + 1] += b[1];
+            a[i + 2] += b[2];
+        }
+
+        normals = new Float32Array(vertices.length);
+
+        // Add all face normals
+        for (i = 0; i < indices.length; i += 3)
+        {
+            ia = indices[i] * 3;
+            ib = indices[i + 1] * 3;
+            ic = indices[i + 2] * 3;
+            va = [vertices[ia], vertices[ia + 1], vertices[ia + 2]];
+            vb = [vertices[ib], vertices[ib + 1], vertices[ib + 2]];
+            vc = [vertices[ic], vertices[ic + 1], vertices[ic + 2]];
+            edgeAB = vec3Minus(vb, va);
+            edgeAC = vec3Minus(vc, va);
+            b = vec3Cross(edgeAB, edgeAC);
+            add(normals, ia, b);
+            add(normals, ib, b);
+            add(normals, ic, b);
+        }
+
+        // Normalize the vectors
+        for (i = 0; i < normals.length; i += 3)
+        {
+            b = Math.sqrt(normals[i] ** 2 + normals[i + 1] ** 2 + normals[i + 2] ** 2);
+
+            if (b != 0)
+            {
+                normals[i] /= b;
+                normals[i + 1] /= b;
+                normals[i + 2] /= b;
+            }
+        }
+
+        return normals;
     }
 
     buildShape(input: tShapeDefinition): tShapeWebglDefinition
