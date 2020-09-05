@@ -379,7 +379,7 @@ class WebglGfx extends WebglBase
             z: 0
         });
 
-        return this.objects[this.objects.length];
+        return this.objects[this.objects.length - 1];
     }
 
     render()
