@@ -16,8 +16,6 @@ function tick()
 
 function startEditor()
 {
-    let a;
-
     document.getElementById("start_editor").style.display = "none";
     document.getElementById("editor_box").style.display = "block";
 
