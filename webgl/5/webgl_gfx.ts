@@ -59,7 +59,7 @@ class WebglGfx
         this.gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
         this.shapes = [];
-        WEBGL_SHAPES_TO_LOAD.forEach(x => this.addShape(x));
+        WEBGL_SHAPES_TO_LOAD.forEach(x => this.addShape(x[0], x[1]));
 
         this.objects = [];
 
@@ -208,7 +208,7 @@ class WebglGfx
         return normals;
     }
 
-    buildShape(input: tShapeDefinition): tShapeWebglDefinition
+    buildShape(input: tShapeDefinition, localColors: Array<tLocalColorIndex>=[]): tShapeWebglDefinition
     {
         let i: number;
         let j: number;
@@ -296,6 +296,10 @@ class WebglGfx
 
                 case SHAPE_SET_COLOR:
                     c = input[i++];
+                break;
+
+                case SHAPE_SET_COLOR_LOCAL:
+                    c = localColors[input[i++]];
                 break;
 
                 case SHAPE_SET_SIDES:
@@ -443,14 +447,14 @@ class WebglGfx
 
     // should be merged with addShape() but the editor needs to build a shape and
     // not add to this.shapes
-    buildShape2(input: tShapeDefinition)
+    buildShape2(input: tShapeDefinition, localColors: Array<tLocalColorIndex>)
     {
-        return this.buildShape3(...this.buildShape(input));
+        return this.buildShape3(...this.buildShape(input, localColors));
     }
 
-    addShape(input: tShapeDefinition)
+    addShape(input: tShapeDefinition, localColors: Array<tLocalColorIndex>)
     {
-        this.shapes.push(this.buildShape2(input));
+        this.shapes.push(this.buildShape2(input, localColors));
 
         return this.shapes[this.shapes.length - 1];
     }

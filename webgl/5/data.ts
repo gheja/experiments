@@ -73,7 +73,7 @@ const SHAPE_TRAIN1: tShapeDefinition = [
 const SHAPE_CURSOR: tShapeDefinition = [
     SHAPE_SET_SCALE, 1,
     SHAPE_SLICE_SET_HEIGHT, 0.5,
-    SHAPE_SET_COLOR, 3,
+    SHAPE_SET_COLOR_LOCAL, 0,
     SHAPE_SLICE_CIRCLE, 13, 2,
     SHAPE_SLICE_REPEAT,
     SHAPE_SET_SCALE, 0.8,
@@ -83,12 +83,14 @@ const SHAPE_CURSOR: tShapeDefinition = [
     SHAPE_SLICE_REPEAT,
 ];
 
-const WEBGL_SHAPES_TO_LOAD: Array<tShapeDefinition> = [
-    SHAPE_PLANE,
-    SHAPE_TRAIN1,
-    SHAPE_CURSOR
+const WEBGL_SHAPES_TO_LOAD: Array<tShapeDefinitionV2> = [
+    [ SHAPE_PLANE ],
+    [ SHAPE_TRAIN1 ],
+    [ SHAPE_CURSOR, [ 3 ] ],
+    [ SHAPE_CURSOR, [ 5 ] ]
 ];
 
 const SHAPE_PLANE_INDEX = 0;
 const SHAPE_TRAIN1_INDEX = 1;
 const SHAPE_CURSOR_INDEX = 2;
+const SHAPE_CURSOR_BLUE_INDEX = 3;
