@@ -25,6 +25,10 @@ function startEditor()
 function init()
 {
     _gfx = new WebglGfx("canvas");
+    _gfx.createObject(SHAPE_PLANE_INDEX);
+    _gfx.createObject(SHAPE_TRAIN1_INDEX);
+    _gfx.createObject(SHAPE_CURSOR_INDEX);
+
     document.getElementById("start_editor").addEventListener("click", startEditor.bind(null));
     tick();
 }

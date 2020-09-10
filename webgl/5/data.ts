@@ -82,3 +82,13 @@ const SHAPE_CURSOR: tShapeDefinition = [
     SHAPE_SLICE_SET_HEIGHT, -0.5,
     SHAPE_SLICE_REPEAT,
 ];
+
+const WEBGL_SHAPES_TO_LOAD: Array<tShapeDefinition> = [
+    SHAPE_PLANE,
+    SHAPE_TRAIN1,
+    SHAPE_CURSOR
+];
+
+const SHAPE_PLANE_INDEX = 0;
+const SHAPE_TRAIN1_INDEX = 1;
+const SHAPE_CURSOR_INDEX = 2;

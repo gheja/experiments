@@ -59,14 +59,9 @@ class WebglGfx
         this.gl.uniform3f(ambientLight, 0.1, 0.1, 0.1);
 
         this.shapes = [];
-        this.addShape(SHAPE_PLANE);
-        this.addShape(SHAPE_TRAIN1);
-        this.addShape(SHAPE_CURSOR);
+        WEBGL_SHAPES_TO_LOAD.forEach(x => this.addShape(x));
 
         this.objects = [];
-        this.createObject(this.shapes[0]);
-        this.createObject(this.shapes[1]);
-        this.createObject(this.shapes[2]);
 
         this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
     }
@@ -473,10 +468,10 @@ class WebglGfx
         this.shapes[index] = null;
     }
 
-    createObject(shape)
+    createObject(shape_index)
     {
         this.objects.push({
-            shape: shape,
+            shape: this.shapes[shape_index],
             rx: 0,
             ry: 0,
             rz: 0,
