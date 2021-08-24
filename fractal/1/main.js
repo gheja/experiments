@@ -14,6 +14,21 @@ let operation;
 
 let _windows = [];
 
+function clamp(min, max, value)
+{
+	while (value < min)
+	{
+		value += max-min;
+	}
+	
+	while (value > max)
+	{
+		value -= max-min;
+	}
+	
+	return value;
+}
+
 function pickOperation()
 {
 	let operation = _operations[Math.floor(Math.random() * _operations.length)];
