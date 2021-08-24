@@ -7,7 +7,7 @@ let _width = 400;
 let _height = 400;
 let _t;
 let _gui;
-let _settings = { "drawBoxes": false, "alpha": 0.9, "drawOriginal": true, "hueShift": 0, "hue": 50 };
+let _settings = { "drawBoxes": false, "alpha": 0.9, "drawOriginal": true, "hueShift": 1.5, "hue": 50 };
 
 let _operations = [ "normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ];
 let operation;
@@ -61,9 +61,9 @@ function init()
 	
 	_t = 0;
 	
-	_windows.push([ 0.5, 0.5, 0.5, 0.05 ]);
-	_windows.push([ 0.9, 0.9, 0.6, 0.1 ]);
-	_windows.push([ 0.2, 0.2, 0.4, -0.25 ]);
+	_windows.push([ 0.5, 0.5, 0.7, 0.05 ]);
+	_windows.push([ 0.9, 0.9, 0.7, 0.1 ]);
+	_windows.push([ 0.2, 0.2, 0.7, -0.28 ]);
 	
 	pickOperation();
 	window.setInterval(pickOperation, 500);
@@ -118,7 +118,7 @@ function draw()
 	{
 		_ctx.fillStyle = "hsla(" + _settings.hue + ", 100%, 50%, 0.9)";
 		_ctx.globalCompositeOperation = operation;
-		_ctx.fillRect(100 + Math.sin(_t) * 100, 100 + Math.sin(_t*1.4) * 100, 200, 200);
+		_ctx.fillRect(150 + Math.sin(_t) * 150, 150 + Math.sin(_t*1.41) * 150, 100, 100);
 	}
 	
 	// overlay
