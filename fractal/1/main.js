@@ -40,22 +40,28 @@ function init()
 	draw();
 }
 
-function drawWindow(x, y, scale, rotation)
+function drawWindow(x, y, scale, rotation, debug)
 {
 	_ctx2.setTransform(scale, 0, 0, scale, _width/2 - (1-x)*_width*scale, _height/2 - (1-y)*_height*scale);
 //	_ctx2.translate(-_width/2, -_height/2);
 	_ctx2.translate(_width/2, _height/2);
 	_ctx2.rotate(rotation * (Math.PI * 2));
 	_ctx2.translate(-_width/2, -_height/2);
-	_ctx2.drawImage(_canvas, 0, 0);
 	
-	if (_settings.drawBoxes)
+	if (!debug)
 	{
-		_ctx2.strokeStyle = "#f00";
-		_ctx2.lineWidth = 2;
-		_ctx2.beginPath();
-		_ctx2.rect(0, 0, _width, _height);
-		_ctx2.stroke();
+		_ctx2.drawImage(_canvas, 0, 0);
+	}
+	else
+	{
+		if (_settings.drawBoxes)
+		{
+			_ctx2.strokeStyle = "#f00";
+			_ctx2.lineWidth = 2;
+			_ctx2.beginPath();
+			_ctx2.rect(0, 0, _width, _height);
+			_ctx2.stroke();
+		}
 	}
 }
 
@@ -66,9 +72,9 @@ function draw()
 	_ctx2.clearRect(0, 0, _width, _height);
 	_ctx2.globalAlpha = _settings.alpha;
 	_ctx2.globalCompositeOperation = operation;
-	drawWindow(0.5, 0.5, 0.5, 0.05);
-	drawWindow(0.9, 0.9, 0.6, 0.1);
-	drawWindow(0.2, 0.2, 0.4, -0.25);
+	drawWindow(0.5, 0.5, 0.5, 0.05, false);
+	drawWindow(0.9, 0.9, 0.6, 0.1, false);
+	drawWindow(0.2, 0.2, 0.4, -0.25, false);
 	_ctx2.setTransform(1, 0, 0, 1, 0, 0);
 
 	_ctx.clearRect(0, 0, _width, _height);
