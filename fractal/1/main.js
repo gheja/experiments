@@ -29,10 +29,9 @@ function init()
 	
 	_t = 0;
 	
-	
- pickOperation();
- window.setInterval(pickOperation, 500);
- draw();
+	pickOperation();
+	window.setInterval(pickOperation, 500);
+	draw();
 }
 
 function drawWindow(x, y, scale, rotation)
