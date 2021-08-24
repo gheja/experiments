@@ -7,7 +7,7 @@ let _width = 400;
 let _height = 400;
 let _t;
 let _gui;
-let _settings = { "drawBoxes": false, "alpha": 0.9, "drawOriginal": true };
+let _settings = { "drawBoxes": false, "alpha": 0.9, "drawOriginal": true, "hueShift": 0, "hue": 50 };
 
 let _operations = [ "normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ];
 let operation;
@@ -56,6 +56,8 @@ function init()
 	_gui.add(_settings, "drawBoxes");
 	_gui.add(_settings, "alpha", 0.0, 1.0);
 	_gui.add(_settings, "drawOriginal");
+	_gui.add(_settings, "hue", 0, 360).listen();
+	_gui.add(_settings, "hueShift", -20.0, 20.0);
 	
 	_t = 0;
 	
@@ -110,9 +112,11 @@ function draw()
 	_ctx.clearRect(0, 0, _width, _height);
 	_ctx.drawImage(_canvas2, 0, 0);
 	
+	_settings.hue = clamp(0, 360, _settings.hue + _settings.hueShift);
+	
 	if (_settings.drawOriginal)
 	{
-		_ctx.fillStyle = "#c93c";
+		_ctx.fillStyle = "hsla(" + _settings.hue + ", 100%, 50%, 0.9)";
 		_ctx.globalCompositeOperation = operation;
 		_ctx.fillRect(100 + Math.sin(_t) * 100, 100 + Math.sin(_t*1.4) * 100, 200, 200);
 	}
