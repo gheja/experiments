@@ -5,6 +5,8 @@ let _canvas2, _ctx2;
 let _width = 400;
 let _height = 400;
 let _t;
+let _gui;
+let _settings = { "drawBoxes": false, "alpha": 0.9 };
 
 let _operations = [ "normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ];
 let operation;
@@ -27,6 +29,10 @@ function init()
 	_canvas2.height = _height;
 	_ctx2 = _canvas2.getContext("2d");
 	
+	_gui = new dat.GUI();
+	_gui.add(_settings, "drawBoxes");
+	_gui.add(_settings, "alpha", 0.0, 1.0);
+	
 	_t = 0;
 	
 	pickOperation();
@@ -43,11 +49,14 @@ function drawWindow(x, y, scale, rotation)
 	_ctx2.translate(-_width/2, -_height/2);
 	_ctx2.drawImage(_canvas, 0, 0);
 	
-	_ctx2.strokeStyle = "#f00";
-	_ctx2.lineWidth = 2;
-	_ctx2.beginPath(); 
-	_ctx2.rect(0, 0, _width, _height);
-	_ctx2.stroke(); 
+	if (_settings.drawBoxes)
+	{
+		_ctx2.strokeStyle = "#f00";
+		_ctx2.lineWidth = 2;
+		_ctx2.beginPath();
+		_ctx2.rect(0, 0, _width, _height);
+		_ctx2.stroke();
+	}
 }
 
 function draw()
@@ -55,7 +64,7 @@ function draw()
 	_t += 0.02;
 	
 	_ctx2.clearRect(0, 0, _width, _height);
-	_ctx2.globalAlpha = 0.95;
+	_ctx2.globalAlpha = _settings.alpha;
 	_ctx2.globalCompositeOperation = operation;
 	drawWindow(0.5, 0.5, 0.5, 0.05);
 	drawWindow(0.9, 0.9, 0.6, 0.1);
