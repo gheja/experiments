@@ -8,13 +8,11 @@ function dist2d(a, b)
 class System
 {
 	bodies: Array<Body>;
-	zoom: number;
 	centerOfMass: Vec2D;
 	
 	constructor()
 	{
 		this.bodies = [];
-		this.zoom = 0;
 		this.centerOfMass = new Vec2D();
 	}
 	
@@ -53,7 +51,7 @@ class System
 		let acceleration: number;
 		let stepSize: number;
 		
-		stepSize = 1;
+		stepSize = 0.1;
 		
 		this.updateCenterOfMass();
 		d = new Vec2D();

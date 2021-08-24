@@ -1,6 +1,7 @@
 body
 {
 	background: #112;
+	color: #fff;
 }
 
 canvas
@@ -8,4 +9,29 @@ canvas
 	position: fixed;
 	top: 0;
 	left: 0;
+}
+
+.dot
+{
+	position: absolute;
+}
+
+.dot-red
+{
+	color: #f40;
+}
+
+.dot-green
+{
+	color: #0d4;
+}
+
+.dot-blue
+{
+	color: #04f;
+}
+
+.dot-yellow
+{
+	color: #fe4;
 }
