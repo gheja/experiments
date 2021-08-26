@@ -60,10 +60,10 @@ function init()
 	_system.addBody(new Body("Earth", new Vec2D(1.496e11, 0), new Vec2D(0, 460), 5.972e24));
 */
 	
-	_system.addBody(new Body("blue",   new Vec2D(  0, 0), new Vec2D(0, 0), 1e10));
-	_system.addBody(new Body("red",    new Vec2D(-10, 0), new Vec2D(0, -0.3), 1e7));
-	_system.addBody(new Body("green",  new Vec2D( 5, 0), new Vec2D(0,  0.3), 1e7));
-	_system.addBody(new Body("yellow", new Vec2D( 6, 0), new Vec2D(-0.1,  -0.1), 1e6));
+	_system.addBody(new Body("blue",   new Vec2D(  0, 0), new Vec2D( 0.0,  0.0), 1e10));
+	_system.addBody(new Body("red",    new Vec2D(-10, 0), new Vec2D( 0.0, -1.0), 1e7));
+	_system.addBody(new Body("green",  new Vec2D(  5, 0), new Vec2D( 0.0,  1.0), 1e7));
+	_system.addBody(new Body("yellow", new Vec2D(  6, 0), new Vec2D(-0.7, -0.5), 1e6));
 	
 	gfxInit();
 	

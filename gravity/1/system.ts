@@ -86,7 +86,7 @@ class System
 		
 		for (a of this.bodies)
 		{
-			a.stepEnd();
+			a.stepEnd(stepSize);
 			
 			// console.log(a.position);
 		}

@@ -25,10 +25,10 @@ class Body
 		this.tempVelocity.copyFrom(this.velocity);
 	}
 	
-	stepEnd()
+	stepEnd(stepSize: number)
 	{
 		this.velocity.copyFrom(this.tempVelocity);
-		this.position.x += this.velocity.x;
-		this.position.y += this.velocity.y;
+		this.position.x += this.velocity.x * stepSize;
+		this.position.y += this.velocity.y * stepSize;
 	}
 }
