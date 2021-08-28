@@ -6,6 +6,8 @@ let _gfxZoom = 10;
 let _gfxPadX = 15;
 let _gfxPadY = 15;
 
+let _stepsPerFrame = 1;
+
 function createDomObject(name)
 {
 	let tmp;
@@ -73,7 +75,13 @@ function gfxUpdate()
 
 function step()
 {
-	_system.step();
+	let i;
+	
+	for (i=0; i<_stepsPerFrame; i++)
+	{
+		_system.step();
+	}
+	
 	gfxUpdate();
 	
 	window.requestAnimationFrame(step);
@@ -160,6 +168,8 @@ function init()
 	gui.add(window, "initEarthAndMoon");
 	gui.add(window, "initSunEarthAndMoon");
 	gui.add(window, "initFigureEight");
+	
+	gui.add(window, "_stepsPerFrame", 1, 100);
 	
 	initA();
 	
