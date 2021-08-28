@@ -132,9 +132,27 @@ function initSunEarthAndMoon()
 	gfxInit();
 }
 
+function initFigureEight()
+{
+	_system = new System();
+	_system.stepSize = 0.03;
+	
+	// Figure eight orbit of the three body problem by Cris Moore,
+	// described in his paper "Braids in classical dynamics"
+	
+	// The weights here are guessed as the gravitational constant is
+	// different in the paper
+	
+	_system.addBody(new Body("red",   new Vec2D(-0.97000436, -0.24308753), new Vec2D( 0.93240737/2, -0.86473146/2), 1.88e10));
+	_system.addBody(new Body("green", new Vec2D( 0.97000436,  0.24308753), new Vec2D( 0.93240737/2, -0.86473146/2), 1.88e10));
+	_system.addBody(new Body("blue",  new Vec2D( 0,           0         ), new Vec2D(-0.93240737  ,  0.86473146  ), 1.88e10));
+	
+	gfxInit();
+}
+
 function init()
 {
-	initSunEarthAndMoon();
+	initFigureEight();
 	step();
 }
 
