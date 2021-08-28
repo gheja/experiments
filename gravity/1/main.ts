@@ -79,22 +79,22 @@ function step()
 	window.requestAnimationFrame(step);
 }
 
-function init()
+function initA()
 {
 	_system = new System();
-	// kilograms, meters, meters/second
-/*
-	_system.addBody(new Body("Sun", new Vec2D(0, 0), new Vec2D(0, 0), 1.989e30));
-	_system.addBody(new Body("Earth", new Vec2D(1.496e11, 0), new Vec2D(0, 460), 5.972e24));
-*/
+	_system.stepSize = 0.05;
 	
-	_system.addBody(new Body("blue",   new Vec2D(  0, 0), new Vec2D( 0.0,  0.0), 1e10));
-	_system.addBody(new Body("red",    new Vec2D(-10, 0), new Vec2D( 0.0, -1.0), 1e7));
-	_system.addBody(new Body("green",  new Vec2D(  5, 0), new Vec2D( 0.0,  1.0), 1e7));
-	_system.addBody(new Body("yellow", new Vec2D(  6, 0), new Vec2D(-0.7, -0.5), 1e6));
+	_system.addBody(new Body("yellow", new Vec2D(  0, 0), new Vec2D( 0.0,  0.0), 1e12));
+	_system.addBody(new Body("red",    new Vec2D(-10, 0), new Vec2D( 0.0, -2.25), 1e7));
+	_system.addBody(new Body("green",  new Vec2D(  5, 0), new Vec2D( 0.0,  3), 1e7));
+	_system.addBody(new Body("blue",   new Vec2D(  6, 0), new Vec2D(-0.1, -1.8), 1e6));
 	
 	gfxInit();
-	
+}
+
+function init()
+{
+	initA();
 	step();
 }
 
