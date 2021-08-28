@@ -17,14 +17,42 @@ function createDomObject(name)
 	return tmp;
 }
 
+function gfxZoomToFit()
+{
+	let a, max1;
+	
+	max1 = 0.00001;
+	
+	for (a of _system.bodies)
+	{
+		max1 = Math.max(max1, Math.abs(a.position.x));
+		max1 = Math.max(max1, Math.abs(a.position.y));
+	}
+	
+	max1 = max1 * 1.5;
+	
+	_gfxPadX = max1;
+	_gfxPadY = max1;
+	_gfxZoom = 1 / max1 * 200;
+}
+
 function gfxInit()
 {
 	let a;
+	
+	for (a of _gfxDots)
+	{
+		a.parentNode.removeChild(a);
+	}
+	
+	_gfxDots = [];
 	
 	for (a of _system.bodies)
 	{
 		_gfxDots.push(createDomObject(a.name));
 	}
+	
+	gfxZoomToFit();
 }
 
 function gfxUpdate()
