@@ -53,7 +53,6 @@ class System
 		
 		stepSize = 0.1;
 		
-		this.updateCenterOfMass();
 		d = new Vec2D();
 		
 		for (a of this.bodies)
