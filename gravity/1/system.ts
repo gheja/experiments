@@ -72,6 +72,7 @@ class System
 				
 				d.x = b.position.x - a.position.x;
 				d.y = b.position.y - a.position.y;
+				d.normalize();
 				
 				r2 = dist2d(a.position, b.position) ** 2;
 				

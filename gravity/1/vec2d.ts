@@ -26,4 +26,12 @@ class Vec2D
 		this.x = 0;
 		this.y = 0;
 	}
+	
+	normalize()
+	{
+		let a;
+		a = Math.abs(this.x) + Math.abs(this.y);
+		this.x /= a;
+		this.y /= a;
+	}
 }
