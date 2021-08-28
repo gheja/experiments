@@ -92,9 +92,20 @@ function initA()
 	gfxInit();
 }
 
+function initSunAndEarth()
+{
+	_system = new System();
+	_system.stepSize = 50000;
+	
+	_system.addBody(new Body("yellow", new Vec2D(0, 0), new Vec2D(0, 0), 1.989e30));
+	_system.addBody(new Body("blue",   new Vec2D(-147091144000, 0), new Vec2D(0, -30290), 5.972e24));
+	
+	gfxInit();
+}
+
 function init()
 {
-	initA();
+	initSunAndEarth();
 	step();
 }
 
