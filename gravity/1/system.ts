@@ -9,11 +9,13 @@ class System
 {
 	bodies: Array<Body>;
 	centerOfMass: Vec2D;
+	stepSize: number;
 	
 	constructor()
 	{
 		this.bodies = [];
 		this.centerOfMass = new Vec2D();
+		this.stepSize = 0.1;
 	}
 	
 	addBody(body)
@@ -49,9 +51,6 @@ class System
 		let r2: number;
 		let f: number;
 		let acceleration: number;
-		let stepSize: number;
-		
-		stepSize = 0.1;
 		
 		d = new Vec2D();
 		
@@ -79,14 +78,14 @@ class System
 				
 				acceleration = f / a.mass; // m / s^2
 				
-				a.tempVelocity.x += acceleration * d.x * stepSize;
-				a.tempVelocity.y += acceleration * d.y * stepSize;
+				a.tempVelocity.x += acceleration * d.x * this.stepSize;
+				a.tempVelocity.y += acceleration * d.y * this.stepSize;
 			}
 		}
 		
 		for (a of this.bodies)
 		{
-			a.stepEnd(stepSize);
+			a.stepEnd(this.stepSize);
 			
 			// console.log(a.position);
 		}
