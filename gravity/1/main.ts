@@ -125,17 +125,21 @@ function initEarthAndMoon()
 	gfxInit();
 }
 
-function initSunEarthAndMoon()
+function initSolar1()
 {
 	_system = new System();
 	_system.stepSize = 5000;
 	
-	// position and speed of Earth relative to Sun at perihelion
+	// position and speed of planet relative to Sun at perihelion
+	_system.addBody(new Body("yellow", new Vec2D(            0, 0), new Vec2D(0,     0), 1.989e30)); // the Sun
+	_system.addBody(new Body("orange", new Vec2D( -46001200000, 0), new Vec2D(0, 57097), 3.301e23)); // Mercury
+	_system.addBody(new Body("purple", new Vec2D(-107480000000, 0), new Vec2D(0, 35260), 4.867e24)); // Venus
+	_system.addBody(new Body("blue",   new Vec2D(-147091144000, 0), new Vec2D(0, 30290), 5.972e24)); // Earth
+	_system.addBody(new Body("red",    new Vec2D(-206700000000, 0), new Vec2D(0, 26500), 6.390e23)); // Mars
+	
 	// position and speed of Moon relative to Sun at perigee
 	// note: this is not really visible with current viewing settings
-	_system.addBody(new Body("yellow", new Vec2D(0, 0), new Vec2D(0, 0), 1.989e30));
-	_system.addBody(new Body("blue",   new Vec2D(-147091144000, 0), new Vec2D(0, 30290), 5.972e24));
-	_system.addBody(new Body("green",  new Vec2D(-363300000 -147091144000, 0), new Vec2D(0, 1075 + 30290), 7.34767309e22));
+	_system.addBody(new Body("green",  new Vec2D(-363300000 -147091144000, 0), new Vec2D(0, 1075 + 30290), 7.34767309e22)); // the Moon of Earth
 	
 	gfxInit();
 }
@@ -166,7 +170,7 @@ function init()
 	gui.add(window, "initA");
 	gui.add(window, "initSunAndEarth");
 	gui.add(window, "initEarthAndMoon");
-	gui.add(window, "initSunEarthAndMoon");
+	gui.add(window, "initSolar1");
 	gui.add(window, "initFigureEight");
 	
 	gui.add(window, "_stepsPerFrame", 1, 100);
