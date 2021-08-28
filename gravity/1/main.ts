@@ -97,15 +97,29 @@ function initSunAndEarth()
 	_system = new System();
 	_system.stepSize = 50000;
 	
+	// position and speed of Earth relative to Sun at perihelion
 	_system.addBody(new Body("yellow", new Vec2D(0, 0), new Vec2D(0, 0), 1.989e30));
 	_system.addBody(new Body("blue",   new Vec2D(-147091144000, 0), new Vec2D(0, 30290), 5.972e24));
 	
 	gfxInit();
 }
 
+function initEarthAndMoon()
+{
+	_system = new System();
+	_system.stepSize = 5000;
+	
+	// position and speed of Moon relative to Earth at perigee
+	// note: the Earth has no initial speed here
+	_system.addBody(new Body("blue",  new Vec2D(0, 0), new Vec2D(0, 0), 5.972e24));
+	_system.addBody(new Body("green",  new Vec2D(-363300000, 0), new Vec2D(0, 1075), 7.34767309e22));
+	
+	gfxInit();
+}
+
 function init()
 {
-	initSunAndEarth();
+	initEarthAndMoon();
 	step();
 }
 
