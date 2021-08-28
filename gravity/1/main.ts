@@ -152,7 +152,17 @@ function initFigureEight()
 
 function init()
 {
-	initFigureEight();
+	let gui;
+	
+	gui = new dat.GUI();
+	gui.add(window, "initA");
+	gui.add(window, "initSunAndEarth");
+	gui.add(window, "initEarthAndMoon");
+	gui.add(window, "initSunEarthAndMoon");
+	gui.add(window, "initFigureEight");
+	
+	initA();
+	
 	step();
 }
 
