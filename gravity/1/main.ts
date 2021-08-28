@@ -117,9 +117,24 @@ function initEarthAndMoon()
 	gfxInit();
 }
 
+function initSunEarthAndMoon()
+{
+	_system = new System();
+	_system.stepSize = 5000;
+	
+	// position and speed of Earth relative to Sun at perihelion
+	// position and speed of Moon relative to Sun at perigee
+	// note: this is not really visible with current viewing settings
+	_system.addBody(new Body("yellow", new Vec2D(0, 0), new Vec2D(0, 0), 1.989e30));
+	_system.addBody(new Body("blue",   new Vec2D(-147091144000, 0), new Vec2D(0, 30290), 5.972e24));
+	_system.addBody(new Body("green",  new Vec2D(-363300000 -147091144000, 0), new Vec2D(0, 1075 + 30290), 7.34767309e22));
+	
+	gfxInit();
+}
+
 function init()
 {
-	initEarthAndMoon();
+	initSunEarthAndMoon();
 	step();
 }
 
