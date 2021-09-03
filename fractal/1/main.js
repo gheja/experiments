@@ -7,7 +7,7 @@ let _width = 400;
 let _height = 400;
 let _t;
 let _gui;
-let _settings = { "drawBoxes": false, "alpha": 0.9, "drawOriginal": true, "hueShift": 1.5, "hue": 50 };
+let _settings = { "drawBoxes": false, "alpha": 0.9, "drawOriginal": true, "hueShift": 1.5, "hue": 50, "pattern": 1 };
 
 let _operations = [ "normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ];
 let operation;
@@ -58,6 +58,7 @@ function init()
 	_gui.add(_settings, "drawOriginal");
 	_gui.add(_settings, "hue", 0, 360).listen();
 	_gui.add(_settings, "hueShift", -20.0, 20.0);
+	_gui.add(_settings, "pattern", 1, 2, 1);
 	
 	_t = 0;
 	
@@ -116,9 +117,30 @@ function draw()
 	
 	if (_settings.drawOriginal)
 	{
-		_ctx.fillStyle = "hsla(" + _settings.hue + ", 100%, 50%, 0.9)";
 		_ctx.globalCompositeOperation = operation;
-		_ctx.fillRect(150 + Math.sin(_t) * 150, 150 + Math.sin(_t*1.41) * 150, 100, 100);
+		
+		_ctx.fillStyle = "hsla(" + _settings.hue + ", 100%, 50%, 0.9)";
+		
+		if (_settings.pattern == 1)
+		{
+			_ctx.fillRect(150 + Math.sin(_t) * 150, 150 + Math.sin(_t*1.41) * 150, 100, 100);
+		}
+		else
+		{
+			_ctx.beginPath();
+			_ctx.arc(150 + Math.sin(_t) * 150, 150 + Math.sin(_t*1.41) * 150, 50, 0, Math.PI * 2);
+			_ctx.fill();
+			
+			_ctx.fillStyle = "hsla(" + clamp(0, 360, _settings.hue + 40) + ", 100%, 50%, 0.9)";
+			_ctx.beginPath();
+			_ctx.arc(150 + Math.sin(_t*1.82) * 150, 150 + Math.sin(_t*0.76) * 150, 20, 0, Math.PI * 2);
+			_ctx.fill();
+			
+			_ctx.fillStyle = "hsla(" + clamp(0, 360, _settings.hue + 80) + ", 100%, 50%, 0.9)";
+			_ctx.beginPath();
+			_ctx.arc(150 + Math.sin(_t*0.68) * 150, 150 + Math.sin(_t*1.33) * 150, 20, 0, Math.PI * 2);
+			_ctx.fill();
+		}
 	}
 	
 	// overlay
